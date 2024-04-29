@@ -1,9 +1,7 @@
 //import config.JpaConfiguration;
+import Auth.JwtService;
+import Auth.LoginUtil;
 import DAO.UserDAO;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-        import Model.Endereco;
 import Model.User;
 
         import java.io.IOException;
@@ -20,9 +18,10 @@ public class Teste {
 
         // Fechando o contexto ao finalizar a aplicação
 //        context.close();
-        User user = new User("Matheus", "42999935401", new Endereco("Ponta Grossa", "Paraná", "Brasil", "Spartaco Gambassi", 31));
-        User user2 = new User("João", "42999935401", new Endereco("Ponta Grossa", "Paraná", "Brasil", "Spartaco Gambassi", 31));
-        User user3 = new User("Pedro", "42999935401", new Endereco("Ponta Grossa", "Paraná", "Brasil", "Spartaco Gambassi", 31));
+        User user = new User("Matheus", "matheus@gmail.com", "12345");
+        User user2 = new User("Matheus", "matheus222@gmail.com", "12345");
+//        User user2 = new User("João", "42999935401");
+//        User user3 = new User("Pedro", "42999935401");
 //
 //        ArrayList<Object> users = new ArrayList<>();
 //        users.add(user);
@@ -33,6 +32,15 @@ public class Teste {
 
         UserDAO userDAO = new UserDAO();
 
-        System.out.println(userDAO.getAllUsers());
+//        System.out.println(userDAO.createUser(user));
+//
+//        System.out.println(userDAO.getAllUsers());
+
+//        System.out.println(userDAO.getUserByEmail("matheus@gmail.com"));
+
+//        LoginUtil.login(user.getEmail(), "12345");
+        LoginUtil.logout("matheus@gmail.com");
+
+//        System.out.println(JwtService.checkPassword("12345", user.getSenha()));
     }
 }

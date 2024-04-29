@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import static middlewares.JsonMiddleware.jsonToObject;
-import static middlewares.JsonMiddleware.objectToJson;
 
 public class Cliente {
 
@@ -34,8 +33,8 @@ public class Cliente {
                     System.out.print("Enter json: ");
                     String userDataJson = in.readLine();
                     User user = jsonToObject(userDataJson, User.class); // Deserialize JSON into User object
-                    userService.createUser(user);
-                    out.println("register");
+//                    userService.createUser(user);
+//                    out.println("register");
                     out.println(userDataJson);
                 } else if (Objects.equals(choice, "list")) {
                     out.println("list_users");

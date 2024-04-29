@@ -1,42 +1,41 @@
 package Model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import Auth.JwtService;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users")
+@Table(name = "candidato")
 public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
-    private Long idUsuario;
+    @Column(name = "id")
+    private Long id;
     @Column(name = "nome", length = 100, nullable = false)
     private String nome;
-    @Column(name = "telefone", length = 100, nullable = false)
-    private String telefone;
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id_endereco")
-    private Endereco endereco;
+    @Column(name = "email", length = 100, nullable = false, unique = true)
+    private String email;
+    @Column(name = "senha", length = 100, nullable = false)
+    private String senha;
+    @Column(name = "jwt_token", length = 200, nullable = true)
+    private String jwtToken;
 
-    public User(String nome, String telefone, Endereco endereco) {
+
+    public User(String nome, String email, String senha) {
         this.nome = nome;
-        this.telefone = telefone;
-        this.endereco = endereco;
+        this.email = email;
+        this.senha = JwtService.hashPassword(senha);
+        this.jwtToken = null;
     }
 
     public User() {
     }
 
-    public Long getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(Long idUsuario) {
-        this.idUsuario = idUsuario;
+    public Long getId() {
+        return id;
     }
 
     public String getNome() {
@@ -47,29 +46,51 @@ public class User implements Serializable {
         this.nome = nome;
     }
 
-    public String getTelefone() {
-        return telefone;
+    public String getEmail() {
+        return email;
     }
 
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public Endereco getEndereco() {
-        return endereco;
+    public String getSenha() {
+        return senha;
     }
 
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getJwtToken() {
+        return jwtToken;
+    }
+
+    public void setJwtToken(String jwtToken) {
+        this.jwtToken = jwtToken;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(nome, user.nome) && Objects.equals(email, user.email) && Objects.equals(senha, user.senha);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nome, email, senha);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "idUsuario=" + idUsuario +
+                "id=" + id +
                 ", nome='" + nome + '\'' +
-                ", telefone='" + telefone + '\'' +
-                ", endereco=" + endereco +
+                ", email='" + email + '\'' +
+                ", senha='" + senha + '\'' +
+                ", jwtToken='" + jwtToken + '\'' +
                 '}';
     }
 }
