@@ -20,6 +20,7 @@ public class Servidor {
                      BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
 
                     String input = in.readLine();
+                    System.out.println(input);
 
                     if (input == null) {
                         out.println("Received null input");
@@ -27,7 +28,7 @@ public class Servidor {
                     }
 
                     switch (input) {
-                        case "register":
+                        case "cadastrarUsuario":
                             String userJson = in.readLine();
                             if (userJson == null) {
                                 out.println("No user data received");

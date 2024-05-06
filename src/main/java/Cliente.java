@@ -1,8 +1,11 @@
 import Model.User;
+import middlewares.JsonMiddleware;
 import services.UserService;
 
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -13,7 +16,7 @@ public class Cliente {
     private static final UserService userService = new UserService();
 
     public static void main(String[] args) {
-        String serverHostname = "192.168.1.14";
+        String serverHostname = "10.40.14.179";
         System.out.println("Attempting to connect to host " + serverHostname + " on port 22222.");
 
         try (Socket socket = new Socket(serverHostname, 22222);
@@ -27,15 +30,25 @@ public class Cliente {
                 System.out.println("2. List users");
                 System.out.println("3. Exit");
                 System.out.print("Enter your choice: ");
-                String choice = scanner.nextLine();
+                int choice = scanner.nextInt();
+                scanner.nextLine();
 
-                if (Objects.equals(choice, "register")) {
-                    System.out.print("Enter json: ");
-                    String userDataJson = in.readLine();
-                    User user = jsonToObject(userDataJson, User.class); // Deserialize JSON into User object
-//                    userService.createUser(user);
-//                    out.println("register");
-                    out.println(userDataJson);
+                if (Objects.equals(choice, 1)) {
+                    System.out.println("Nome: ");
+                    String name = scanner.nextLine();
+                    System.out.println("Email: ");
+                    String email = scanner.nextLine();
+                    System.out.println("Senha: ");
+                    String password = scanner.nextLine();
+
+                    Map<String, String> jsonFields = new HashMap<>();
+                    jsonFields.put("nome", name);
+                    jsonFields.put("email", email);
+                    jsonFields.put("senha", password);
+                    jsonFields.put("operacao", "cadastrarUsuario");
+
+                    out.println(JsonMiddleware.stringToJson(jsonFields));
+
                 } else if (Objects.equals(choice, "list")) {
                     out.println("list_users");
                 } else if (Objects.equals(choice, "exit")) {
