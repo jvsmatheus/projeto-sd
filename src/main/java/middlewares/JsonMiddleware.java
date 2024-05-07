@@ -3,6 +3,7 @@ package middlewares;
 
 import Model.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -26,13 +27,12 @@ public class JsonMiddleware {
         }
     }
 
-    public static String constructJson(Map<String, String> jsonFields) throws IOException {
-        StringWriter sw = new StringWriter();
-        objectMapper.writeValue(sw, jsonFields); // mapper is a ObjectMapper instance
-        return sw.toString();
+    public static String mapToJson(Map<String, String> fields) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(fields);
     }
 
-    public static String stringToJson(Map<String, String> fields) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(fields);
+    public static JsonNode stringToJsonNode(String json) throws JsonProcessingException {
+        JsonNode node = objectMapper.readTree(json);
+        return node;
     }
 }

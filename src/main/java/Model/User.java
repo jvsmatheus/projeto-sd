@@ -20,15 +20,13 @@ public class User implements Serializable {
     private String email;
     @Column(name = "senha", length = 100, nullable = false)
     private String senha;
-    @Column(name = "jwt_token", length = 200, nullable = true)
-    private String jwtToken;
+
 
 
     public User(String nome, String email, String senha) {
         this.nome = nome;
         this.email = email;
         this.senha = JwtService.hashPassword(senha);
-        this.jwtToken = null;
     }
 
     public User() {
@@ -59,19 +57,13 @@ public class User implements Serializable {
     }
 
     public void setSenha(String senha) {
-        this.senha = senha;
+        this.senha = JwtService.hashPassword(senha);
     }
 
-    public String getJwtToken() {
-        return jwtToken;
-    }
-
-    public void setJwtToken(String jwtToken) {
-        this.jwtToken = jwtToken;
-    }
 
     @Override
     public boolean equals(Object o) {
+
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
@@ -90,7 +82,6 @@ public class User implements Serializable {
                 ", nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
                 ", senha='" + senha + '\'' +
-                ", jwtToken='" + jwtToken + '\'' +
                 '}';
     }
 }

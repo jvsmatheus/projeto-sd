@@ -16,7 +16,7 @@ public class Cliente {
     private static final UserService userService = new UserService();
 
     public static void main(String[] args) {
-        String serverHostname = "10.40.14.179";
+        String serverHostname = "192.168.1.2";
         System.out.println("Attempting to connect to host " + serverHostname + " on port 22222.");
 
         try (Socket socket = new Socket(serverHostname, 22222);
@@ -47,7 +47,7 @@ public class Cliente {
                     jsonFields.put("senha", password);
                     jsonFields.put("operacao", "cadastrarUsuario");
 
-                    out.println(JsonMiddleware.stringToJson(jsonFields));
+                    out.println(JsonMiddleware.mapToJson(jsonFields));
 
                 } else if (Objects.equals(choice, "list")) {
                     out.println("list_users");

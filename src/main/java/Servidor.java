@@ -1,3 +1,4 @@
+import com.fasterxml.jackson.databind.JsonNode;
 import middlewares.JsonMiddleware;
 import services.UserService;
 import Model.User;
@@ -20,24 +21,28 @@ public class Servidor {
                      BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
 
                     String input = in.readLine();
-                    System.out.println(input);
 
                     if (input == null) {
                         out.println("Received null input");
                         continue; // Skip to the next loop iteration if input is null
                     }
 
-                    switch (input) {
+                    JsonNode node = JsonMiddleware.stringToJsonNode(input);
+
+                    switch (node.get("operacao").asText()) {
                         case "cadastrarUsuario":
-                            String userJson = in.readLine();
-                            if (userJson == null) {
-                                out.println("No user data received");
+                            User user = new User();
+                            user.setNome(node.get("nome").asText());
+                            user.setEmail(node.get("email").asText());
+                            user.setSenha(node.get("senha").asText());
+
+                            try {
+                                userService.createUser(user);
+                            } catch (Exception e) {
+                                out.println("Erro ao cadastrar usuário.");
                                 break;
                             }
-                            User user = JsonMiddleware.jsonToObject(userJson, User.class);
-                            boolean success = userService.createUser(user);
-                            out.println(success ? "Registration successful" : "Registration failed");
-                            break;
+
                         case "list_users":
                             String usersList = JsonMiddleware.objectToJson(userService.findAllUsers());
                             out.println(usersList);
@@ -46,7 +51,7 @@ public class Servidor {
                             out.println("Exiting...");
                             return; // Server stops after exit command
                         default:
-                            out.println("Unknown command");
+                            out.println("Comando inválido");
                             break;
                     }
                 } catch (IOException e) {

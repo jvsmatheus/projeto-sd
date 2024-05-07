@@ -11,7 +11,6 @@ public class LoginUtil {
         User user = userDAO.getUserByEmail(email);
         if (user != null) {
             if (JwtService.checkPassword(senha, user.getSenha())) {
-                user.setJwtToken(JwtService.createJwt(user.getId()));
                 userDAO.updateUser(user.getId(), user);
                 System.out.println("Logado com sucesso");
             } else {
@@ -25,7 +24,6 @@ public class LoginUtil {
     public static void logout(String email) {
         User user = userDAO.getUserByEmail(email);
         if (user != null) {
-            user.setJwtToken(null);
             userDAO.updateUser(user.getId(), user);
             System.out.println("Deslogado com sucesso");
         } else {
