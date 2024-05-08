@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Map;
 
 public class JsonMiddleware {
@@ -15,6 +16,10 @@ public class JsonMiddleware {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static String objectToJson(User object) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(object);
+    }
+
+    public static String objectListToJson(List<User> object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);
     }
 
@@ -35,4 +40,6 @@ public class JsonMiddleware {
         JsonNode node = objectMapper.readTree(json);
         return node;
     }
+
+
 }

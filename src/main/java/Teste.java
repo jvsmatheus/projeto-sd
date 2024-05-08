@@ -34,12 +34,12 @@ public class Teste {
 
 //        System.out.println(userDAO.createUser(user));
 //
-//        System.out.println(userDAO.getAllUsers());
+        System.out.println(userDAO.getAllUsers());
 
 //        System.out.println(userDAO.getUserByEmail("matheus@gmail.com"));
 
 //        LoginUtil.login(user.getEmail(), "12345");
-        LoginUtil.logout("matheus@gmail.com");
+//        LoginUtil.logout("matheus@gmail.com");
 
 //        System.out.println(JwtService.checkPassword("12345", user.getSenha()));
     }

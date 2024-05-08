@@ -33,29 +33,57 @@ public class Cliente {
                 int choice = scanner.nextInt();
                 scanner.nextLine();
 
-                if (Objects.equals(choice, 1)) {
-                    System.out.println("Nome: ");
-                    String name = scanner.nextLine();
-                    System.out.println("Email: ");
-                    String email = scanner.nextLine();
-                    System.out.println("Senha: ");
-                    String password = scanner.nextLine();
+                switch (choice) {
+                    case 1: {
+                        System.out.println("Nome: ");
+                        String name = scanner.nextLine();
+                        System.out.println("Email: ");
+                        String email = scanner.nextLine();
+                        System.out.println("Senha: ");
+                        String password = scanner.nextLine();
 
-                    Map<String, String> jsonFields = new HashMap<>();
-                    jsonFields.put("nome", name);
-                    jsonFields.put("email", email);
-                    jsonFields.put("senha", password);
-                    jsonFields.put("operacao", "cadastrarUsuario");
+                        Map<String, String> jsonFields = new HashMap<>();
+                        jsonFields.put("nome", name);
+                        jsonFields.put("email", email);
+                        jsonFields.put("senha", password);
+                        jsonFields.put("operacao", "cadastrarCandidato");
 
-                    out.println(JsonMiddleware.mapToJson(jsonFields));
+                        out.println(JsonMiddleware.mapToJson(jsonFields));
+                        break;
+                    }
+                    case 2: {
+                        Map<String, String> jsonFields = new HashMap<>();
+                        jsonFields.put("operacao", "listarCandidato");
 
-                } else if (Objects.equals(choice, "list")) {
-                    out.println("list_users");
-                } else if (Objects.equals(choice, "exit")) {
-                    out.println("exit");
-                    break;
-                } else {
-                    System.out.println("Invalid choice, please try again.");
+                        out.println(JsonMiddleware.mapToJson(jsonFields));
+                        break;
+                    }
+
+                    case 3: {
+                        System.out.println("Id: ");
+                        String id = scanner.nextLine();
+                        System.out.println("Nome: ");
+                        String name = scanner.nextLine();
+                        System.out.println("Email: ");
+                        String email = scanner.nextLine();
+                        System.out.println("Senha: ");
+                        String password = scanner.nextLine();
+
+                        Map<String, String> jsonFields = new HashMap<>();
+                        jsonFields.put("id", id);
+                        jsonFields.put("nome", name);
+                        jsonFields.put("email", email);
+                        jsonFields.put("senha", password);
+                        jsonFields.put("operacao", "atualizarCandidato");
+
+                        out.println(JsonMiddleware.mapToJson(jsonFields));
+                        break;
+                    }
+                    default: {
+                        System.out.println("Opção inválida");
+                        break;
+                    }
+
                 }
 
                 String response = in.readLine();

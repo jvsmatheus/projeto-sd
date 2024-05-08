@@ -21,6 +21,7 @@ public class Servidor {
                      BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
 
                     String input = in.readLine();
+                    System.out.println(input);
 
                     if (input == null) {
                         out.println("Received null input");
@@ -30,23 +31,48 @@ public class Servidor {
                     JsonNode node = JsonMiddleware.stringToJsonNode(input);
 
                     switch (node.get("operacao").asText()) {
-                        case "cadastrarUsuario":
+                        case "cadastrarCandidato": {
                             User user = new User();
                             user.setNome(node.get("nome").asText());
                             user.setEmail(node.get("email").asText());
                             user.setSenha(node.get("senha").asText());
 
                             try {
-                                userService.createUser(user);
+                                boolean success = userService.createUser(user);
+                                if (success) {
+                                    out.println("Cadastro realizado com sucesso");
+                                }
+                                break;
                             } catch (Exception e) {
                                 out.println("Erro ao cadastrar usuário.");
                                 break;
                             }
+                        }
 
-                        case "list_users":
-                            String usersList = JsonMiddleware.objectToJson(userService.findAllUsers());
-                            out.println(usersList);
+                        case "listarCandidato": {
+                            String usersList = JsonMiddleware.objectListToJson(userService.findAllUsers());
+                            out.println("Lista de usuários cadastrados: " + usersList);
                             break;
+                        }
+
+                        case "atualizarCandidato": {
+                            User user = new User();
+                            user.setId(node.get("id").asLong());
+                            user.setNome(node.get("nome").asText());
+                            user.setEmail(node.get("email").asText());
+                            user.setSenha(node.get("senha").asText());
+
+                            try {
+                                boolean success = userService.updateUser(node.get("id").asLong(), user);
+                                if (success) {
+                                    out.println("Candidato atualizado com sucesso");
+                                }
+                                break;
+                            } catch (Exception e) {
+                                out.println("Erro ao atualizar usuário usuário.");
+                                break;
+                            }
+                        }
                         case "exit":
                             out.println("Exiting...");
                             return; // Server stops after exit command
