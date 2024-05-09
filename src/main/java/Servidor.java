@@ -12,20 +12,23 @@ public class Servidor {
         int port = 22222;
         UserService userService = new UserService();
 
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Server is listening on port " + port);
+        System.out.println("Server is listening on port " + port);
 
-            while (true) {
-                try (Socket clientSocket = serverSocket.accept();
-                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                     BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+        try (ServerSocket serverSocket = new ServerSocket(port);
+             Socket clientSocket = serverSocket.accept();
+             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+
+            System.out.println("Usuário conectado");
+
+            while (in.readLine() != null) {
 
                     String input = in.readLine();
                     System.out.println(input);
 
                     if (input == null) {
-                        out.println("Received null input");
-                        continue; // Skip to the next loop iteration if input is null
+                        System.out.println("Received null input");
+                        break; // Skip to the next loop iteration if input is null
                     }
 
                     JsonNode node = JsonMiddleware.stringToJsonNode(input);
@@ -73,6 +76,22 @@ public class Servidor {
                                 break;
                             }
                         }
+                        case "deletarCandidato": {
+                            try {
+                                boolean success = userService.deleteUser(node.get("id").asLong());
+                                System.out.println(success);
+                                if (success) {
+                                    out.println("Candidato atualizado com sucesso");
+                                } else {
+                                    out.println("Usuário não cadastrado");
+                                }
+                                break;
+                            } catch (Exception e) {
+                                out.println("Erro ao deletar usuário");
+                                break;
+                            }
+                        }
+
                         case "exit":
                             out.println("Exiting...");
                             return; // Server stops after exit command
@@ -80,12 +99,12 @@ public class Servidor {
                             out.println("Comando inválido");
                             break;
                     }
-                } catch (IOException e) {
-                    System.out.println("Exception caught when trying to listen on port " +
-                            port + " or listening for a connection");
-                    System.out.println(e.getMessage());
-                }
             }
+
+        } catch (IOException e) {
+            System.out.println("Exception caught when trying to listen on port " +
+                    port + " or listening for a connection");
+            System.out.println(e.getMessage());
         }
     }
 }

@@ -16,19 +16,22 @@ public class Cliente {
     private static final UserService userService = new UserService();
 
     public static void main(String[] args) {
-        String serverHostname = "192.168.1.2";
+        String serverHostname = "10.20.8.166";
         System.out.println("Attempting to connect to host " + serverHostname + " on port 22222.");
 
         try (Socket socket = new Socket(serverHostname, 22222);
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              Scanner scanner = new Scanner(System.in)) {
-
+            System.out.println("aqui");
             while (true) {
                 System.out.println("\nMenu:");
-                System.out.println("1. Register user");
-                System.out.println("2. List users");
-                System.out.println("3. Exit");
+                System.out.println("1. Cadastrar candidato");
+                System.out.println("2. Listar candidato");
+                System.out.println("3. Atualizar candidato");
+                System.out.println("4. Deletar candidato");
+                System.out.println("5. login");
+                System.out.println("6. logout");
                 System.out.print("Enter your choice: ");
                 int choice = scanner.nextInt();
                 scanner.nextLine();
@@ -75,6 +78,18 @@ public class Cliente {
                         jsonFields.put("email", email);
                         jsonFields.put("senha", password);
                         jsonFields.put("operacao", "atualizarCandidato");
+
+                        out.println(JsonMiddleware.mapToJson(jsonFields));
+                        break;
+                    }
+
+                    case 4: {
+                        System.out.println("Id a ser deletado: ");
+                        String id = scanner.nextLine();
+
+                        Map<String, String> jsonFields = new HashMap<>();
+                        jsonFields.put("id", id);
+                        jsonFields.put("operacao", "deletarCandidato");
 
                         out.println(JsonMiddleware.mapToJson(jsonFields));
                         break;

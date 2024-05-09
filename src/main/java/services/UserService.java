@@ -21,4 +21,7 @@ public class UserService {
         return userDAO.updateUser(id, user);
     }
 
+    public boolean deleteUser(Long id) {
+        return userDAO.deleteUser(id);
+    }
 }
