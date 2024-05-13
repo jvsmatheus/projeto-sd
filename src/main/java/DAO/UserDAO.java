@@ -2,7 +2,7 @@ package DAO;
 
 import Model.User;
 import jakarta.persistence.NoResultException;
-import middlewares.HibernateUtils;
+import Middlewares.HibernateUtils;
 
 import java.util.List;
 
@@ -27,11 +27,11 @@ public class UserDAO {
         return false;
     }
 
-    public Boolean updateUser(Long id, User newUserDetails) {
+    public Boolean updateUser(String email, User newUserDetails) {
         try {
             db.getManager().getTransaction().begin(); // Inicia uma transação
 
-            User existingUser = db.getManager().find(User.class, id); // Busca o usuário pelo ID
+            User existingUser = db.getManager().find(User.class, email); // Busca o usuário pelo ID
             if (existingUser == null) {
                 return false; // Retorna false se o usuário não for encontrado
             }
@@ -52,11 +52,11 @@ public class UserDAO {
         return false; // Retorna falso se a operação falhar
     }
 
-    public Boolean deleteUser(Long id) {
+    public Boolean deleteUser(String email) {
         try {
             db.getManager().getTransaction().begin(); // Inicia uma transação
 
-            User user =  db.getManager().find(User.class, id); // Busca o usuário pelo ID
+            User user =  getUserByEmail(email); // Busca o usuário pelo email
             if (user == null) {
                 return false; // Retorna false se o usuário não for encontrado
             }

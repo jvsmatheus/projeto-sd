@@ -11,7 +11,7 @@ public class LoginUtil {
         User user = userDAO.getUserByEmail(email);
         if (user != null) {
             if (JwtService.checkPassword(senha, user.getSenha())) {
-                userDAO.updateUser(user.getId(), user);
+//                userDAO.updateUser(user.getId(), user);
                 System.out.println("Logado com sucesso");
             } else {
                 System.out.println("Login e/ou senha incorreto");
@@ -24,7 +24,7 @@ public class LoginUtil {
     public static void logout(String email) {
         User user = userDAO.getUserByEmail(email);
         if (user != null) {
-            userDAO.updateUser(user.getId(), user);
+//            userDAO.updateUser(user.getId(), user);
             System.out.println("Deslogado com sucesso");
         } else {
             System.out.println("Usuário não encontrado");

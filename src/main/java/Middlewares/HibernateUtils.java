@@ -1,4 +1,4 @@
-package middlewares;
+package Middlewares;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;

@@ -1,4 +1,4 @@
-package services;
+package Services;
 
 import DAO.UserDAO;
 import Model.User;
@@ -17,11 +17,15 @@ public class UserService {
         return userDAO.getAllUsers();
     }
 
-    public boolean updateUser(Long id, User user) {
-        return userDAO.updateUser(id, user);
+    public boolean updateUser(String email, User user) {
+        return userDAO.updateUser(email, user);
     }
 
-    public boolean deleteUser(Long id) {
-        return userDAO.deleteUser(id);
+    public boolean deleteUser(String email) {
+        return userDAO.deleteUser(email);
+    }
+
+    public User getUserByEmail(String email) {
+        return userDAO.getUserByEmail(email);
     }
 }

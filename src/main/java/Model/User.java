@@ -5,15 +5,15 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "candidato")
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "id", length = 36, nullable = false)
+    private String id;
     @Column(name = "nome", length = 100, nullable = false)
     private String nome;
     @Column(name = "email", length = 100, nullable = false, unique = true)
@@ -24,6 +24,7 @@ public class User implements Serializable {
 
 
     public User(String nome, String email, String senha) {
+        this.id = String.valueOf(UUID.randomUUID());
         this.nome = nome;
         this.email = email;
         this.senha = JwtService.hashPassword(senha);
@@ -32,11 +33,11 @@ public class User implements Serializable {
     public User() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

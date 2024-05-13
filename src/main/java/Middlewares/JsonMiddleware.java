@@ -1,4 +1,4 @@
-package middlewares;
+package Middlewares;
 
 
 import Model.User;
@@ -6,8 +6,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +13,7 @@ public class JsonMiddleware {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static String objectToJson(User object) throws JsonProcessingException {
+    public static String objectToJson(Object object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);
     }
 

@@ -1,10 +1,11 @@
 //import config.JpaConfiguration;
-import Auth.JwtService;
-import Auth.LoginUtil;
+
 import DAO.UserDAO;
 import Model.User;
 
-        import java.io.IOException;
+import java.io.IOException;
+
+import static Middlewares.Utils.isEmailValid;
 
 public class Teste {
 
@@ -19,7 +20,7 @@ public class Teste {
         // Fechando o contexto ao finalizar a aplicação
 //        context.close();
         User user = new User("Matheus", "matheus@gmail.com", "12345");
-        User user2 = new User("Matheus", "matheus222@gmail.com", "12345");
+//        User user2 = new User("Matheus", "matheus222@gmail.com", "12345");
 //        User user2 = new User("João", "42999935401");
 //        User user3 = new User("Pedro", "42999935401");
 //
@@ -32,9 +33,9 @@ public class Teste {
 
         UserDAO userDAO = new UserDAO();
 
-//        System.out.println(userDAO.createUser(user));
+        System.out.println(userDAO.createUser(user));
 //
-        System.out.println(userDAO.getAllUsers());
+//        System.out.println(userDAO.getAllUsers());
 
 //        System.out.println(userDAO.getUserByEmail("matheus@gmail.com"));
 
@@ -42,5 +43,14 @@ public class Teste {
 //        LoginUtil.logout("matheus@gmail.com");
 
 //        System.out.println(JwtService.checkPassword("12345", user.getSenha()));
+
+//        System.out.println(isEmailValid("example@example.com")); // true
+//        System.out.println(isEmailValid("e@e.co~ç")); // false, menos de 7 caracteres
+//        System.out.println(isEmailValid("too-short@a.co")); // false, menos de 7 caracteres
+//        System.out.println(isEmailValid("thisisaverylongemailaddress@example.com")); // true
+//        System.out.println(isEmailValid("incorrect-email-format@com")); // false
+
+        User userGetId = userDAO.getUserByEmail(user.getEmail());
+        System.out.println(userGetId.getId().toString());
     }
 }

@@ -1,38 +1,46 @@
+import Exceptions.InvalidName;
+import Middlewares.JsonMiddleware;
+import Middlewares.Utils;
+import Model.ResponseEntity;
 import Model.User;
-import middlewares.JsonMiddleware;
-import services.UserService;
+import Services.UserService;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
-import static middlewares.JsonMiddleware.jsonToObject;
-
 public class Cliente {
 
-    private static final UserService userService = new UserService();
-
     public static void main(String[] args) {
-        String serverHostname = "10.20.8.166";
+        String serverHostname = "192.168.1.2";
         System.out.println("Attempting to connect to host " + serverHostname + " on port 22222.");
+
+        UserService userService = new UserService();
 
         try (Socket socket = new Socket(serverHostname, 22222);
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              Scanner scanner = new Scanner(System.in)) {
-            System.out.println("aqui");
+
             while (true) {
+
                 System.out.println("\nMenu:");
                 System.out.println("1. Cadastrar candidato");
-                System.out.println("2. Listar candidato");
-                System.out.println("3. Atualizar candidato");
-                System.out.println("4. Deletar candidato");
-                System.out.println("5. login");
-                System.out.println("6. logout");
-                System.out.print("Enter your choice: ");
+                System.out.println("2. Achar candidato por email");
+                System.out.println("3. Listar todos os candidatos");
+                System.out.println("4. Atualizar candidato");
+                System.out.println("5. Deletar candidato");
+                System.out.println("6. login");
+                System.out.println("7. logout");
+                System.out.println("8. Encerrar aplicação");
+                System.out.print("Digite a opção: ");
                 int choice = scanner.nextInt();
                 scanner.nextLine();
 
@@ -45,16 +53,43 @@ public class Cliente {
                         System.out.println("Senha: ");
                         String password = scanner.nextLine();
 
+                        if (Utils.isUsernameValid(name) && Utils.isEmailValid(email) && Utils.isPasswordValid(password)) {
+                            Map<String, String> jsonFields = new HashMap<>();
+                            jsonFields.put("nome", name);
+                            jsonFields.put("email", email);
+                            jsonFields.put("senha", password);
+                            jsonFields.put("operacao", "cadastrarCandidato");
+
+                            out.println(JsonMiddleware.mapToJson(jsonFields));
+                            break;
+                        } else {
+                            System.out.println("Erro no cadastro:");
+                            if (!Utils.isUsernameValid(name)) {
+                                System.out.println(new ResponseEntity(404, "cadastrarUsuario", "nome inválido"));
+                            }
+                            if (!Utils.isEmailValid(email)) {
+                                System.out.println(new ResponseEntity(404, "cadastrarUsuario", "email invalido"));
+                                if (!Objects.isNull(userService.getUserByEmail(email))) {
+                                    System.out.println(new ResponseEntity(422, "cadastrarUsuario", "email já cadastrado"));
+                                }
+                            }
+                            if (!Utils.isPasswordValid(password)) {
+                                System.out.println(new ResponseEntity(404, "cadastrarUsuario", "senha inválida"));
+                            }
+                        }
+                    }
+                    case 2: {
+                        System.out.println("Email: ");
+                        String email = scanner.nextLine();
+
                         Map<String, String> jsonFields = new HashMap<>();
-                        jsonFields.put("nome", name);
                         jsonFields.put("email", email);
-                        jsonFields.put("senha", password);
-                        jsonFields.put("operacao", "cadastrarCandidato");
+                        jsonFields.put("operacao", "visualizarCandidato");
 
                         out.println(JsonMiddleware.mapToJson(jsonFields));
                         break;
                     }
-                    case 2: {
+                    case 3: {
                         Map<String, String> jsonFields = new HashMap<>();
                         jsonFields.put("operacao", "listarCandidato");
 
@@ -62,9 +97,8 @@ public class Cliente {
                         break;
                     }
 
-                    case 3: {
-                        System.out.println("Id: ");
-                        String id = scanner.nextLine();
+                    case 4: {
+
                         System.out.println("Nome: ");
                         String name = scanner.nextLine();
                         System.out.println("Email: ");
@@ -72,8 +106,8 @@ public class Cliente {
                         System.out.println("Senha: ");
                         String password = scanner.nextLine();
 
+
                         Map<String, String> jsonFields = new HashMap<>();
-                        jsonFields.put("id", id);
                         jsonFields.put("nome", name);
                         jsonFields.put("email", email);
                         jsonFields.put("senha", password);
@@ -83,16 +117,21 @@ public class Cliente {
                         break;
                     }
 
-                    case 4: {
-                        System.out.println("Id a ser deletado: ");
-                        String id = scanner.nextLine();
+                    case 5: {
+                        System.out.println("Email do candidato a ser deletado: ");
+                        String email = scanner.nextLine();
 
                         Map<String, String> jsonFields = new HashMap<>();
-                        jsonFields.put("id", id);
+                        jsonFields.put("email", email);
                         jsonFields.put("operacao", "deletarCandidato");
 
                         out.println(JsonMiddleware.mapToJson(jsonFields));
                         break;
+                    }
+
+                    case 8: {
+                        System.out.println("Fechando conexão e desligando servidor");
+                        return;
                     }
                     default: {
                         System.out.println("Opção inválida");
@@ -100,9 +139,8 @@ public class Cliente {
                     }
 
                 }
-
                 String response = in.readLine();
-                System.out.println("Server says: " + response);
+                System.out.println(response);
             }
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host: " + serverHostname);
