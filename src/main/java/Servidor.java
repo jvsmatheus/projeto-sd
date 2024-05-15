@@ -118,6 +118,14 @@ public class Servidor {
                             break;
                         }
                     }
+                    case "loginCandidato": {
+                        out.println(userService.userLogin(node.get("email").asText(), node.get("senha").asText()));
+                        break;
+                    }
+                    case "logoutCandidato": {
+                        out.println(userService.userLogout(userService.userLogout(node.get("token").asText())));
+                        break;
+                    }
                     case "exit":
                         out.println("Exiting...");
                         return; // Server stops after exit command

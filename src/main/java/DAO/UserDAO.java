@@ -1,5 +1,6 @@
 package DAO;
 
+import Model.LogedUSer;
 import Model.User;
 import jakarta.persistence.NoResultException;
 import Middlewares.HibernateUtils;
@@ -85,4 +86,18 @@ public class UserDAO {
             return null;
         }
     }
+    public User getUSerById(String id) {
+        try {
+            String query = "SELECT u FROM User u WHERE u.id = :id"; // Cria a consulta JPQL
+            return db.getManager().createQuery(query, User.class)
+                    .setParameter("id", id) // Define o parâmetro de e-mail
+                    .getSingleResult(); // Retorna o usuário encontrado
+        } catch (NoResultException nre) {
+            return null; // Retorna null se nenhum usuário for encontrado
+        } catch (Exception ex) {
+            ex.printStackTrace(); // Imprime o rastreamento de pilha se ocorrer outro erro
+            return null;
+        }
+    }
+
 }

@@ -1,13 +1,22 @@
 package Services;
 
+import Auth.JwtService;
+import DAO.LogedUserDAO;
 import DAO.UserDAO;
+import Middlewares.JsonMiddleware;
+import Model.LogedUSer;
+import Model.ResponseEntity;
 import Model.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
+import java.util.Objects;
 
 public class UserService {
 
     private final UserDAO userDAO = new UserDAO();
+    private final LogedUserDAO logedUserDAO = new LogedUserDAO();
 
     public boolean createUser(User user) {
         return userDAO.createUser(user);
@@ -27,5 +36,33 @@ public class UserService {
 
     public User getUserByEmail(String email) {
         return userDAO.getUserByEmail(email);
+    }
+
+    public String userLogin(String email, String senha) throws JsonProcessingException {
+        User user = userDAO.getUserByEmail(email);
+
+        String userJson = JsonMiddleware.objectToJson(user);
+
+        if (email.equals(user.getEmail()) && JwtService.checkPassword(senha, user.getSenha())) {
+            LogedUSer logedUSer = new LogedUSer();
+            logedUSer.setId(user.getId());
+            logedUSer.setEmail(email);
+            logedUserDAO.createLogedUser(logedUSer);
+            return JsonMiddleware.objectToJson(new ResponseEntity(200, "loginUsuario", "token: " + logedUSer.getId()));
+        }
+        return JsonMiddleware.objectToJson(new ResponseEntity(401, "loginUsuario", "Login e/ou senha incorretos"));
+    }
+
+    public String userLogout(String token) throws JsonProcessingException {
+        User user = userDAO.getUSerById(token);
+        LogedUSer logedUSer = logedUserDAO.getUserLogedUSerByEmail(user.getEmail());
+        if (Objects.isNull(logedUSer)) {
+            return JsonMiddleware.objectToJson(new ResponseEntity(401, "logoutUsuario", "Usuário não está logado"));
+        }
+
+        JsonNode userJson = JsonMiddleware.stringToJsonNode(user.toString());
+
+        logedUserDAO.deleteLogedUSer(user.getEmail());
+        return JsonMiddleware.objectToJson(new ResponseEntity(200, "logoutUsuario", "token: " + userJson.get("id")));
     }
 }

@@ -1,8 +1,6 @@
-import Exceptions.InvalidName;
 import Middlewares.JsonMiddleware;
 import Middlewares.Utils;
 import Model.ResponseEntity;
-import Model.User;
 import Services.UserService;
 
 import java.io.BufferedReader;
@@ -19,7 +17,7 @@ import java.util.Scanner;
 public class Cliente {
 
     public static void main(String[] args) {
-        String serverHostname = "192.168.1.2";
+        String serverHostname = "10.20.8.173";
         System.out.println("Attempting to connect to host " + serverHostname + " on port 22222.");
 
         UserService userService = new UserService();
@@ -124,6 +122,33 @@ public class Cliente {
                         Map<String, String> jsonFields = new HashMap<>();
                         jsonFields.put("email", email);
                         jsonFields.put("operacao", "deletarCandidato");
+
+                        out.println(JsonMiddleware.mapToJson(jsonFields));
+                        break;
+                    }
+
+                    case 6: {
+                        System.out.println("Email: ");
+                        String email = scanner.nextLine();
+                        System.out.println("Senha: ");
+                        String password = scanner.nextLine();
+
+                        Map<String, String> jsonFields = new HashMap<>();
+                        jsonFields.put("email", email);
+                        jsonFields.put("senha", password);
+                        jsonFields.put("operacao", "loginCandidato");
+
+                        out.println(JsonMiddleware.mapToJson(jsonFields));
+                        break;
+                    }
+
+                    case 7: {
+                        System.out.println("Token: ");
+                        String token = scanner.nextLine();
+
+                        Map<String, String> jsonFields = new HashMap<>();
+                        jsonFields.put("token", token);
+                        jsonFields.put("operacao", "logoutCandidato");
 
                         out.println(JsonMiddleware.mapToJson(jsonFields));
                         break;
