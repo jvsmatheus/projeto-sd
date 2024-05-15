@@ -22,7 +22,6 @@ public class UserDAO {
             db.getManager().getTransaction().commit();
             return true;
         } catch (Exception ex) {
-            db.getManager().getTransaction().rollback();
             ex.printStackTrace();
         }
         return false;
@@ -32,7 +31,8 @@ public class UserDAO {
         try {
             db.getManager().getTransaction().begin(); // Inicia uma transação
 
-            User existingUser = db.getManager().find(User.class, email); // Busca o usuário pelo ID
+            User existingUser = getUserByEmail(email);// Busca o usuário pelo ID
+            System.out.println(existingUser);
             if (existingUser == null) {
                 return false; // Retorna false se o usuário não for encontrado
             }

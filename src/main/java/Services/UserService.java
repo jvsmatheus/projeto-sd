@@ -53,16 +53,23 @@ public class UserService {
         return JsonMiddleware.objectToJson(new ResponseEntity(401, "loginUsuario", "Login e/ou senha incorretos"));
     }
 
-    public String userLogout(String token) throws JsonProcessingException {
-        User user = userDAO.getUSerById(token);
-        LogedUSer logedUSer = logedUserDAO.getUserLogedUSerByEmail(user.getEmail());
-        if (Objects.isNull(logedUSer)) {
-            return JsonMiddleware.objectToJson(new ResponseEntity(401, "logoutUsuario", "Usuário não está logado"));
+    public String userLogout(String email) throws JsonProcessingException {
+        User user = userDAO.getUserByEmail(email);
+
+        if (Objects.isNull(user)) {
+            return JsonMiddleware.objectToJson(new ResponseEntity(401, "logoutUsuario", "Email não cadastrado"));
         }
 
-        JsonNode userJson = JsonMiddleware.stringToJsonNode(user.toString());
+        LogedUSer logedUser = logedUserDAO.getUserLogedUSerByEmail(user.getEmail());
 
-        logedUserDAO.deleteLogedUSer(user.getEmail());
-        return JsonMiddleware.objectToJson(new ResponseEntity(200, "logoutUsuario", "token: " + userJson.get("id")));
+        if (Objects.isNull(logedUser)) {
+            return JsonMiddleware.objectToJson(new ResponseEntity(401, "logoutUsuario", "Usuário não está logado"));
+        }
+        System.out.println("aqui");
+        String userJson = JsonMiddleware.objectToJson(user);
+        System.out.println("lá");
+
+        logedUserDAO.deleteLogedUSer(logedUser.getEmail());
+        return JsonMiddleware.objectToJson(new ResponseEntity(200, "logoutUsuario", "token: " + userJson));
     }
 }

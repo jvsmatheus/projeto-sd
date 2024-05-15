@@ -21,8 +21,6 @@ public class User implements Serializable {
     @Column(name = "senha", length = 100, nullable = false)
     private String senha;
 
-
-
     public User(String nome, String email, String senha) {
         this.id = String.valueOf(UUID.randomUUID());
         this.nome = nome;

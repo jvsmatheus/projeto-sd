@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class Cliente {
 
     public static void main(String[] args) {
-        String serverHostname = "10.20.8.173";
+        String serverHostname = "192.168.1.2";
         System.out.println("Attempting to connect to host " + serverHostname + " on port 22222.");
 
         UserService userService = new UserService();
@@ -96,14 +96,12 @@ public class Cliente {
                     }
 
                     case 4: {
-
-                        System.out.println("Nome: ");
-                        String name = scanner.nextLine();
-                        System.out.println("Email: ");
+                        System.out.println("Email já cadastrado: ");
                         String email = scanner.nextLine();
-                        System.out.println("Senha: ");
+                        System.out.println("Nome a ser trocado: ");
+                        String name = scanner.nextLine();
+                        System.out.println("Senha a ser trocado: ");
                         String password = scanner.nextLine();
-
 
                         Map<String, String> jsonFields = new HashMap<>();
                         jsonFields.put("nome", name);
@@ -143,11 +141,11 @@ public class Cliente {
                     }
 
                     case 7: {
-                        System.out.println("Token: ");
-                        String token = scanner.nextLine();
+                        System.out.println("Email: ");
+                        String email = scanner.nextLine();
 
                         Map<String, String> jsonFields = new HashMap<>();
-                        jsonFields.put("token", token);
+                        jsonFields.put("email", email);
                         jsonFields.put("operacao", "logoutCandidato");
 
                         out.println(JsonMiddleware.mapToJson(jsonFields));

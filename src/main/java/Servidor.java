@@ -84,25 +84,24 @@ public class Servidor {
                     }
 
                     case "atualizarCandidato": {
-
                         User user = new User();
-                        user.setId(node.get("id").asText());
                         user.setNome(node.get("nome").asText());
                         user.setEmail(node.get("email").asText());
                         user.setSenha(node.get("senha").asText());
 
                         System.out.println(user);
 
-//                        try {
-//                            boolean success = userService.updateUser(node.get("id").asLong(), user);
-//                            if (success) {
-//                                out.println("Candidato atualizado com sucesso");
-//                            }
-//                            break;
-//                        } catch (Exception e) {
-//                            out.println("Erro ao atualizar usuário usuário.");
-//                            break;
-//                        }
+                        try {
+                            boolean success = userService.updateUser(user.getEmail(), user);
+                            System.out.println(success);
+                            if (success) {
+                                out.println("Candidato atualizado com sucesso");
+                            }
+                            break;
+                        } catch (Exception e) {
+                            out.println("Erro ao atualizar usuário usuário.");
+                            break;
+                        }
                     }
                     case "deletarCandidato": {
                         try {
@@ -123,7 +122,7 @@ public class Servidor {
                         break;
                     }
                     case "logoutCandidato": {
-                        out.println(userService.userLogout(userService.userLogout(node.get("token").asText())));
+                        out.println(userService.userLogout(node.get("email").asText()));
                         break;
                     }
                     case "exit":
