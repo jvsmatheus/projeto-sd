@@ -49,13 +49,13 @@ public class Servidor {
                             if (success) {
                                 User userGetId = userService.getUserByEmail(user.getEmail());
 
-                                ResponseEntity responseEntity = new ResponseEntity(201, "cadastrarUsuario", userGetId.getId().toString());
+                                ResponseEntity responseEntity = new ResponseEntity(201, "cadastrarCandidato", userGetId.getId());
 
                                 out.println(JsonMiddleware.objectToJson(responseEntity));
                             }
                             break;
                         } catch (Exception e) {
-                            ResponseEntity responseEntity = new ResponseEntity(404, "cadastrarUsuario", "erro ao cadastrar candidato");
+                            ResponseEntity responseEntity = new ResponseEntity(404, "cadastrarCandidato", "erro ao cadastrar candidato");
 
                             out.println(JsonMiddleware.objectToJson(responseEntity));
                             break;
@@ -67,13 +67,12 @@ public class Servidor {
                             if (Objects.isNull(user)) {
                                 throw new IOException();
                             }
-                            String userJson = JsonMiddleware.objectToJson(user);
-                            ResponseEntity responseEntity = new ResponseEntity(201, "cadastrarUsuario", userJson);
+                            ResponseEntity responseEntity = new ResponseEntity(201, "vizualizarCandidato", user.getId());
 
                             out.println(JsonMiddleware.objectToJson(responseEntity));
                             break;
                         } catch (Exception e) {
-                            out.println(new ResponseEntity(404, "cadastrarUsuario", "email não encontrado"));
+                            out.println(new ResponseEntity(404, "vizualizarCandidato", "email não encontrado"));
                             break;
                         }
                     }
@@ -103,7 +102,7 @@ public class Servidor {
                             break;
                         }
                     }
-                    case "deletarCandidato": {
+                    case "apagarCandidato": {
                         try {
                             boolean success = userService.deleteUser(node.get("email").asText());
                             if (success) {

@@ -17,7 +17,7 @@ import java.util.Scanner;
 public class Cliente {
 
     public static void main(String[] args) {
-        String serverHostname = "192.168.1.2";
+        String serverHostname = "10.20.8.199";
         System.out.println("Attempting to connect to host " + serverHostname + " on port 22222.");
 
         UserService userService = new UserService();
@@ -119,7 +119,7 @@ public class Cliente {
 
                         Map<String, String> jsonFields = new HashMap<>();
                         jsonFields.put("email", email);
-                        jsonFields.put("operacao", "deletarCandidato");
+                        jsonFields.put("operacao", "apagarCandidato");
 
                         out.println(JsonMiddleware.mapToJson(jsonFields));
                         break;
@@ -146,7 +146,7 @@ public class Cliente {
 
                         Map<String, String> jsonFields = new HashMap<>();
                         jsonFields.put("email", email);
-                        jsonFields.put("operacao", "logoutCandidato");
+                        jsonFields.put("operacao", "logout");
 
                         out.println(JsonMiddleware.mapToJson(jsonFields));
                         break;

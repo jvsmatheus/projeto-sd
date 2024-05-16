@@ -40,6 +40,7 @@ public class UserService {
 
     public String userLogin(String email, String senha) throws JsonProcessingException {
         User user = userDAO.getUserByEmail(email);
+        System.out.println(user);
 
         String userJson = JsonMiddleware.objectToJson(user);
 
@@ -48,28 +49,25 @@ public class UserService {
             logedUSer.setId(user.getId());
             logedUSer.setEmail(email);
             logedUserDAO.createLogedUser(logedUSer);
-            return JsonMiddleware.objectToJson(new ResponseEntity(200, "loginUsuario", "token: " + logedUSer.getId()));
+            return JsonMiddleware.objectToJson(new ResponseEntity(200, "loginCandidato", logedUSer.getId()));
         }
-        return JsonMiddleware.objectToJson(new ResponseEntity(401, "loginUsuario", "Login e/ou senha incorretos"));
+        return JsonMiddleware.objectToJson(new ResponseEntity(401, "loginCandidato", "Login e/ou senha incorretos"));
     }
 
     public String userLogout(String email) throws JsonProcessingException {
         User user = userDAO.getUserByEmail(email);
 
         if (Objects.isNull(user)) {
-            return JsonMiddleware.objectToJson(new ResponseEntity(401, "logoutUsuario", "Email não cadastrado"));
+            return JsonMiddleware.objectToJson(new ResponseEntity(401, "logoutCandidato", "Email não cadastrado"));
         }
 
         LogedUSer logedUser = logedUserDAO.getUserLogedUSerByEmail(user.getEmail());
 
         if (Objects.isNull(logedUser)) {
-            return JsonMiddleware.objectToJson(new ResponseEntity(401, "logoutUsuario", "Usuário não está logado"));
+            return JsonMiddleware.objectToJson(new ResponseEntity(401, "logoutCandidato", "Usuário não está logado"));
         }
-        System.out.println("aqui");
-        String userJson = JsonMiddleware.objectToJson(user);
-        System.out.println("lá");
 
         logedUserDAO.deleteLogedUSer(logedUser.getEmail());
-        return JsonMiddleware.objectToJson(new ResponseEntity(200, "logoutUsuario", "token: " + userJson));
+        return JsonMiddleware.objectToJson(new ResponseEntity(200, "logoutCandidato", logedUser.getId()));
     }
 }
