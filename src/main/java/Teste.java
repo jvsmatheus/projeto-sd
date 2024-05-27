@@ -1,5 +1,6 @@
 //import config.JpaConfiguration;
 
+import Auth.JwtService;
 import DAO.UserDAO;
 import Model.User;
 
@@ -33,7 +34,7 @@ public class Teste {
 
         UserDAO userDAO = new UserDAO();
 
-        System.out.println(userDAO.createUser(user));
+//        System.out.println(userDAO.createUser(user));
 //
 //        System.out.println(userDAO.getAllUsers());
 
@@ -50,7 +51,6 @@ public class Teste {
 //        System.out.println(isEmailValid("thisisaverylongemailaddress@example.com")); // true
 //        System.out.println(isEmailValid("incorrect-email-format@com")); // false
 
-        User userGetId = userDAO.getUserByEmail(user.getEmail());
-        System.out.println(userGetId.getId().toString());
+        System.out.println(JwtService.checkPassword("12345", JwtService.hashPassword("12345")));
     }
 }

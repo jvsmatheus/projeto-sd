@@ -1,4 +1,5 @@
-import Model.ResponseEntity;
+import Model.ResponseEntities.ResponseEntity;
+import Model.ResponseEntities.TokenResponseEntity;
 import com.fasterxml.jackson.databind.JsonNode;
 import Middlewares.JsonMiddleware;
 import Services.UserService;
@@ -49,9 +50,7 @@ public class Servidor {
                             if (success) {
                                 User userGetId = userService.getUserByEmail(user.getEmail());
 
-                                ResponseEntity responseEntity = new ResponseEntity(201, "cadastrarCandidato", userGetId.getId());
-
-                                out.println(JsonMiddleware.objectToJson(responseEntity));
+                                out.println(JsonMiddleware.objectToJson(new TokenResponseEntity(201, "cadastrarCandidato", userGetId.getId())));
                             }
                             break;
                         } catch (Exception e) {
@@ -67,9 +66,8 @@ public class Servidor {
                             if (Objects.isNull(user)) {
                                 throw new IOException();
                             }
-                            ResponseEntity responseEntity = new ResponseEntity(201, "vizualizarCandidato", user.getId());
 
-                            out.println(JsonMiddleware.objectToJson(responseEntity));
+                            out.println(JsonMiddleware.objectToJson(new TokenResponseEntity(201, "vizualizarCandidato", user.getId())));
                             break;
                         } catch (Exception e) {
                             out.println(new ResponseEntity(404, "vizualizarCandidato", "email não encontrado"));
@@ -120,8 +118,8 @@ public class Servidor {
                         out.println(userService.userLogin(node.get("email").asText(), node.get("senha").asText()));
                         break;
                     }
-                    case "logoutCandidato": {
-                        out.println(userService.userLogout(node.get("email").asText()));
+                    case "logout": {
+                        out.println(userService.userLogout(node.get("token").asText()));
                         break;
                     }
                     case "exit":

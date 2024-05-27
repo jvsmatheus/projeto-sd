@@ -1,6 +1,5 @@
 package DAO;
 
-import Model.LogedUSer;
 import Model.User;
 import jakarta.persistence.NoResultException;
 import Middlewares.HibernateUtils;

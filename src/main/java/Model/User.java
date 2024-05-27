@@ -20,12 +20,15 @@ public class User implements Serializable {
     private String email;
     @Column(name = "senha", length = 100, nullable = false)
     private String senha;
+    @Column(name = "logado", nullable = false)
+    private boolean logado;
 
     public User(String nome, String email, String senha) {
         this.id = String.valueOf(UUID.randomUUID());
         this.nome = nome;
         this.email = email;
-        this.senha = JwtService.hashPassword(senha);
+        this.senha = senha;
+        this.logado = false;
     }
 
     public User() {
@@ -63,28 +66,35 @@ public class User implements Serializable {
         this.senha = JwtService.hashPassword(senha);
     }
 
+    public boolean isLogado() {
+        return logado;
+    }
+
+    public void setLogado(boolean logado) {
+        this.logado = logado;
+    }
 
     @Override
     public boolean equals(Object o) {
-
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(nome, user.nome) && Objects.equals(email, user.email) && Objects.equals(senha, user.senha);
+        return logado == user.logado && Objects.equals(id, user.id) && Objects.equals(nome, user.nome) && Objects.equals(email, user.email) && Objects.equals(senha, user.senha);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, email, senha);
+        return Objects.hash(id, nome, email, senha, logado);
     }
 
     @Override
     public String toString() {
-        return "{" +
-                "id=" + id +
+        return "User{" +
+                "id='" + id + '\'' +
                 ", nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
                 ", senha='" + senha + '\'' +
+                ", logado=" + logado +
                 '}';
     }
 }
