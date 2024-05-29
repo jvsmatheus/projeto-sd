@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class Cliente {
 
     public static void main(String[] args) {
-        String serverHostname = "10.20.8.177";
+        String serverHostname = "192.168.1.2";
         System.out.println("Attempting to connect to host " + serverHostname + " on port 22222.");
 
         UserService userService = new UserService();
@@ -59,6 +59,7 @@ public class Cliente {
                                 jsonFields.put("operacao", "cadastrarCandidato");
 
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
                                 break;
 
 //                                else {
@@ -87,6 +88,7 @@ public class Cliente {
                                 jsonFields.put("operacao", "visualizarCandidato");
 
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
                                 break;
                             }
                             case 3: {
@@ -104,6 +106,7 @@ public class Cliente {
                                 jsonFields.put("operacao", "atualizarCandidato");
 
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
                                 break;
                             }
 
@@ -116,6 +119,7 @@ public class Cliente {
                                 jsonFields.put("operacao", "apagarCandidato");
 
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
                                 break;
                             }
 
@@ -131,6 +135,7 @@ public class Cliente {
                                 jsonFields.put("operacao", "loginCandidato");
 
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
                                 break;
                             }
 
@@ -143,6 +148,7 @@ public class Cliente {
                                 jsonFields.put("operacao", "logout");
 
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
                                 break;
                             }
 
@@ -154,8 +160,8 @@ public class Cliente {
                                 System.out.println("Opção inválida");
                                 break;
                             }
-
                         }
+                        break;
                     }
                     case "2" : {
                         System.out.println("\nMenu:");
@@ -192,10 +198,11 @@ public class Cliente {
                                 jsonFields.put("cnpj", cnpj);
                                 jsonFields.put("senha", password);
                                 jsonFields.put("descricao", descricao);
-                                jsonFields.put("ramo", descricao);
+                                jsonFields.put("ramo", ramo);
                                 jsonFields.put("operacao", "cadastrarEmpresa");
 
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
                                 break;
                             }
                             case 2: {
@@ -207,6 +214,7 @@ public class Cliente {
                                 jsonFields.put("operacao", "visualizarEmpresa");
 
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
                                 break;
                             }
                             case 3: {
@@ -233,6 +241,7 @@ public class Cliente {
                                 jsonFields.put("operacao", "atualizarEmpresa");
 
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
                                 break;
                             }
                             case 4: {
@@ -244,6 +253,7 @@ public class Cliente {
                                 jsonFields.put("operacao", "apagarEmpresa");
 
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
                                 break;
                             }
                             case 5: {
@@ -258,17 +268,19 @@ public class Cliente {
                                 jsonFields.put("operacao", "loginEmpresa");
 
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
                                 break;
                             }
                             case 6: {
                                 System.out.println("Token: ");
-                                String email = scanner.nextLine();
+                                String token = scanner.nextLine();
 
                                 Map<String, String> jsonFields = new HashMap<>();
-                                jsonFields.put("token", email);
+                                jsonFields.put("token", token);
                                 jsonFields.put("operacao", "logout");
 
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
                                 break;
                             }
 
@@ -282,12 +294,8 @@ public class Cliente {
                             }
                         }
                     }
+                    break;
                 }
-
-
-
-                String response = in.readLine();
-                System.out.println(response);
             }
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host: " + serverHostname);

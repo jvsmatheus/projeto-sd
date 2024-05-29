@@ -17,6 +17,7 @@ import java.util.UUID;
 public class Servidor {
     public static void main(String[] args) throws IOException {
         int port = 22222;
+
         UserService userService = new UserService();
         EmpressService empressService = new EmpressService();
 
@@ -43,58 +44,19 @@ public class Servidor {
 
                 switch (node.get("operacao").asText()) {
                     case "cadastrarCandidato": {
-                        User user = new User();
-                        user.setId(String.valueOf(UUID.randomUUID()));
-                        user.setNome(node.get("nome").asText());
-                        user.setEmail(node.get("email").asText());
-                        user.setSenha(node.get("senha").asText());
-
-                        try {
-                            boolean success = userService.createUser(user);
-                            if (success) {
-                                User userGetId = userService.getUserByEmail(user.getEmail());
-
-                                out.println(JsonMiddleware.objectToJson(new TokenResponseEntity(201, "cadastrarCandidato", userGetId.getId())));
-                            }
-                            break;
-                        } catch (Exception e) {
-                            MessageResponseEntity messageResponseEntity = new MessageResponseEntity(404, "cadastrarCandidato", "erro ao cadastrar candidato");
-
-                            out.println(JsonMiddleware.objectToJson(messageResponseEntity));
-                            break;
-                        }
+                        out.println(userService.createUser(node));
+                        break;
                     }
                     case "visualizarCandidato": {
-                        User user = userService.getUserByEmail(node.get("email").asText());
-                        if (Objects.isNull(user)) {
-                            out.println(JsonMiddleware.objectToJson(new MessageResponseEntity(404, "vizualizarCandidato", "E-mail não encontrado")));
-                        }
-
-                        out.println(JsonMiddleware.objectToJson(new TokenResponseEntity(201, "vizualizarCandidato", user.getId())));
+                        out.println(userService.getUserByEmail(node));
                         break;
                     }
                     case "atualizarCandidato": {
-                        User user = new User();
-                        user.setNome(node.get("nome").asText());
-                        user.setEmail(node.get("email").asText());
-                        user.setSenha(node.get("senha").asText());
-
-                        boolean success = userService.updateUser(user.getEmail(), user);
-                        if (success) {
-                            out.println(JsonMiddleware.objectToJson(new ResponseEntity(201, "atualizarCandidato")));
-                        } else {
-                            out.println(JsonMiddleware.objectToJson(new MessageResponseEntity(404, "atualizarCandidato", "E-mail não encontrado")));
-                        }
+                        out.println(userService.updateUser(node));
                         break;
-
                     }
                     case "apagarCandidato": {
-                        boolean success = userService.deleteUser(node.get("email").asText());
-                        if (success) {
-                            out.println(JsonMiddleware.objectToJson(new ResponseEntity(201, "apagarCandidato")));
-                        } else {
-                            out.println(JsonMiddleware.objectToJson(new MessageResponseEntity(404, "apagarCandidato", "E-mail não encontrado")));
-                        }
+                        out.println(userService.deleteUser(node));
                         break;
                     }
                     case "loginCandidato": {
@@ -103,37 +65,11 @@ public class Servidor {
                     }
 
                     case "cadastrarEmpresa": {
-                        Empress empress = new Empress();
-                        empress.setId(String.valueOf(UUID.randomUUID()));
-                        empress.setRazaoSocial(node.get("razaoSocial").asText());
-                        empress.setCnpj(node.get("cnpj").asText());
-                        empress.setEmail(node.get("email").asText());
-                        empress.setSenha(node.get("senha").asText());
-                        empress.setDescricao(node.get("descricao").asText());
-                        empress.setRamo(node.get("ramo").asText());
-
-                        try {
-                            boolean success = empressService.createEmpress(empress);
-                            if (success) {
-                                Empress empressGetId = empressService.getEmpressByEmail(empress.getEmail());
-
-                                out.println(JsonMiddleware.objectToJson(new TokenResponseEntity(201, "cadastrarEmpresa", empressGetId.getId())));
-                            }
-                            break;
-                        } catch (Exception e) {
-                            MessageResponseEntity messageResponseEntity = new MessageResponseEntity(404, "cadastrarEmpresa", "erro ao cadastrar empresa");
-
-                            out.println(JsonMiddleware.objectToJson(messageResponseEntity));
-                            break;
-                        }
+                        out.println(empressService.createEmpress(node));
+                        break;
                     }
                     case "visualizarEmpresa": {
-                        Empress empress = empressService.getEmpressByEmail(node.get("email").asText());
-                        if (Objects.isNull(empress)) {
-                            out.println(JsonMiddleware.objectToJson(new MessageResponseEntity(404, "vizualizarEmpresa", "E-mail não encontrado")));
-                        }
-
-                        out.println(JsonMiddleware.objectToJson(new TokenResponseEntity(201, "vizualizarCandidato", empress.getId())));
+                        out.println(empressService.getEmpressByEmail(node));
                         break;
                     }
                     case "atualizarEmpresa": {
@@ -155,12 +91,7 @@ public class Servidor {
 
                     }
                     case "apagarEmpresa": {
-                        boolean success = empressService.deleteEmpress(node.get("email").asText());
-                        if (success) {
-                            out.println(JsonMiddleware.objectToJson(new ResponseEntity(201, "apagarEmpresa")));
-                        } else {
-                            out.println(JsonMiddleware.objectToJson(new MessageResponseEntity(404, "apagarEmpresa", "E-mail não encontrado")));
-                        }
+                        out.println(empressService.deleteEmpress(node));
                         break;
                     }
                     case "loginEmpresa": {
@@ -169,7 +100,7 @@ public class Servidor {
                     }
 
                     case "logout": {
-                        out.println(empressService.empressLogout(node.get("token").asText()));
+                        out.println(userService.logout(node.get("token").asText()));
                         break;
                     }
                     case "exit":

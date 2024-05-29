@@ -30,9 +30,10 @@ public class UserDAO {
         try {
             db.getManager().getTransaction().begin(); // Inicia uma transação
 
-            User existingUser = getUserByEmail(email);// Busca o usuário pelo ID
-            System.out.println(existingUser);
+            User existingUser = getUserByEmail(email);
+
             if (existingUser == null) {
+                db.getManager().getTransaction().rollback(); // Desfaz a transação se o usuário não for encontrado
                 return false; // Retorna false se o usuário não for encontrado
             }
 
@@ -42,11 +43,15 @@ public class UserDAO {
             existingUser.setSenha(newUserDetails.getSenha());
             // Adicione outros campos conforme necessário
 
-            db.getManager().merge(existingUser); // Atualiza o usuário
+            User mergedUser = db.getManager().merge(existingUser); // Atualiza o usuário
+            db.getManager().flush(); // Garante que as alterações são "flushadas" para o banco de dados
             db.getManager().getTransaction().commit(); // Completa a transação com um commit
+
             return true; // Retorna verdadeiro se a operação foi bem-sucedida
         } catch (Exception ex) {
-            db.getManager().getTransaction().rollback(); // Desfaz a transação se ocorrer um erro
+            if (db.getManager().getTransaction().isActive()) {
+                db.getManager().getTransaction().rollback(); // Desfaz a transação se ocorrer um erro
+            }
             ex.printStackTrace();
         }
         return false; // Retorna falso se a operação falhar
