@@ -1,9 +1,8 @@
 package Services;
 
-import Auth.JwtService;
 import DAO.UserDAO;
 import Middlewares.JsonMiddleware;
-import Model.ResponseEntities.ResponseEntity;
+import Model.ResponseEntities.MessageResponseEntity;
 import Model.ResponseEntities.TokenResponseEntity;
 import Model.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,27 +38,27 @@ public class UserService {
         var user = userDAO.getUserByEmail(email);
         System.out.println(user);
         System.out.println(senha);
-        System.out.println(JwtService.hashPassword(senha));
+        System.out.println(senha);
         System.out.println(user.getSenha());
 
-        if (email.equals(user.getEmail()) && JwtService.checkPassword(senha, user.getSenha())) {
+        if (email.equals(user.getEmail()) && senha.equals(user.getSenha())) {
             user.setLogado(true);
 
             userDAO.updateUser(email, user);
             return JsonMiddleware.objectToJson(new TokenResponseEntity(200, "loginCandidato", user.getId()));
         }
-        return JsonMiddleware.objectToJson(new ResponseEntity(401, "loginCandidato", "Login e/ou senha incorretos"));
+        return JsonMiddleware.objectToJson(new MessageResponseEntity(401, "loginCandidato", "Login e/ou senha incorretos"));
     }
 
     public String userLogout(String token) throws JsonProcessingException {
         User user = userDAO.getUSerById(token);
 
         if (Objects.isNull(user)) {
-            return JsonMiddleware.objectToJson(new ResponseEntity(401, "logoutCandidato", "Email não cadastrado"));
+            return JsonMiddleware.objectToJson(new MessageResponseEntity(401, "logout", "Email não cadastrado"));
         }
 
         user.setLogado(false);
         userDAO.updateUser(user.getEmail(), user);
-        return JsonMiddleware.objectToJson(new TokenResponseEntity(200, "logoutCandidato", user.getId()));
+        return JsonMiddleware.objectToJson(new TokenResponseEntity(200, "logout", user.getId()));
     }
 }

@@ -36,7 +36,7 @@ public class Empress {
         this.razaoSocial = razaoSocial;
         this.email = email;
         this.cnpj = cnpj;
-        this.senha = JwtService.hashPassword(senha);
+        this.senha = senha;
         this.descricao = descricao;
         this.ramo = ramo;
         this.logado = false;

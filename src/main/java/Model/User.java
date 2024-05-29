@@ -63,7 +63,7 @@ public class User implements Serializable {
     }
 
     public void setSenha(String senha) {
-        this.senha = JwtService.hashPassword(senha);
+        this.senha = senha;
     }
 
     public boolean isLogado() {

@@ -1,16 +1,18 @@
 package Model.ResponseEntities;
 
-public class ResponseEntity {
+public class MessageResponseEntity {
 
     private int status;
     private String operacao;
+    private String menssagem;
 
-    public ResponseEntity(int status, String operacao) {
+    public MessageResponseEntity(int status, String operacao, String menssagem) {
         this.status = status;
         this.operacao = operacao;
+        this.menssagem = menssagem;
     }
 
-    public ResponseEntity() {
+    public MessageResponseEntity() {
     }
 
     public int getStatus() {
@@ -21,19 +23,28 @@ public class ResponseEntity {
         this.status = status;
     }
 
-    public String getOperacao() {
+    public String getoperacao() {
         return operacao;
     }
 
-    public void setOperacao(String operacao) {
+    public void setoperacao(String operacao) {
         this.operacao = operacao;
+    }
+
+    public String getmenssagem() {
+        return menssagem;
+    }
+
+    public void setmenssagem(String menssagem) {
+        this.menssagem = menssagem;
     }
 
     @Override
     public String toString() {
-        return "ResponseEntity{" +
+        return "{" +
                 "status=" + status +
                 ", operacao='" + operacao + '\'' +
+                ", menssagem='" + menssagem + '\'' +
                 '}';
     }
 }
