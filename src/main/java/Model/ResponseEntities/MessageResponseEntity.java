@@ -4,12 +4,12 @@ public class MessageResponseEntity {
 
     private int status;
     private String operacao;
-    private String menssagem;
+    private String mensagem;
 
-    public MessageResponseEntity(int status, String operacao, String menssagem) {
+    public MessageResponseEntity(int status, String operacao, String mensagem) {
         this.status = status;
         this.operacao = operacao;
-        this.menssagem = menssagem;
+        this.mensagem = mensagem;
     }
 
     public MessageResponseEntity() {
@@ -31,12 +31,12 @@ public class MessageResponseEntity {
         this.operacao = operacao;
     }
 
-    public String getmenssagem() {
-        return menssagem;
+    public String getmensagem() {
+        return mensagem;
     }
 
-    public void setmenssagem(String menssagem) {
-        this.menssagem = menssagem;
+    public void setmensagem(String mensagem) {
+        this.mensagem = mensagem;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class MessageResponseEntity {
         return "{" +
                 "status=" + status +
                 ", operacao='" + operacao + '\'' +
-                ", menssagem='" + menssagem + '\'' +
+                ", mensagem='" + mensagem + '\'' +
                 '}';
     }
 }

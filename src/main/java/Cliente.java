@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class Cliente {
 
     public static void main(String[] args) {
-        String serverHostname = "192.168.1.2";
+        String serverHostname = "10.20.8.162";
         System.out.println("Attempting to connect to host " + serverHostname + " on port 22222.");
 
         UserService userService = new UserService();

@@ -98,6 +98,10 @@ public class EmpressService {
     public String empressLogin(String email, String senha) throws JsonProcessingException {
         var empress = empressDAO.getEmpressByEmail(email);
 
+        if (Objects.isNull(empress)) {
+            return JsonMiddleware.objectToJson(new MessageResponseEntity(404, "loginEmpresa", "E-mail não encontrado"));
+        }
+
         if (email.equals(empress.getEmail()) && senha.equals(empress.getSenha())) {
             empress.setLogado(true);
 
