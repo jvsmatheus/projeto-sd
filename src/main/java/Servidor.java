@@ -1,18 +1,17 @@
+import Middlewares.JsonMiddleware;
 import Model.Empress;
 import Model.ResponseEntities.MessageResponseEntity;
 import Model.ResponseEntities.ResponseEntity;
-import Model.ResponseEntities.TokenResponseEntity;
 import Services.EmpressService;
-import com.fasterxml.jackson.databind.JsonNode;
-import Middlewares.JsonMiddleware;
 import Services.UserService;
-import Model.User;
+import com.fasterxml.jackson.databind.JsonNode;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Objects;
-import java.util.UUID;
 
 public class Servidor {
     public static void main(String[] args) throws IOException {
