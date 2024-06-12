@@ -1,5 +1,9 @@
 import Middlewares.JsonMiddleware;
+import Services.CompetenciaService;
 import Services.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,13 +12,14 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 public class Cliente {
 
     public static void main(String[] args) {
-        String serverHostname = "10.20.8.162";
+        String serverHostname = "192.168.1.2";
         System.out.println("Attempting to connect to host " + serverHostname + " on port 22222.");
 
         UserService userService = new UserService();
@@ -36,9 +41,14 @@ public class Cliente {
                         System.out.println("2. Achar candidato por email");
                         System.out.println("3. Atualizar candidato");
                         System.out.println("4. Deletar candidato");
-                        System.out.println("5. login");
-                        System.out.println("6. logout");
-                        System.out.println("7. Encerrar aplicação");
+                        System.out.println("5. Cadastrar Competência/Experiência");
+                        System.out.println("6. Vizualizar Competencias/Experiencia");
+                        System.out.println("7. Atualizar Competencias/Experiencia");
+                        System.out.println("8. Apagar Competencias/Experiencia");
+                        System.out.println("9. Filtrar Vagas");
+                        System.out.println("10. login");
+                        System.out.println("11. logout");
+                        System.out.println("12. Encerrar aplicação");
                         System.out.print("Digite a opção: ");
                         int choice = scanner.nextInt();
                         scanner.nextLine();
@@ -109,7 +119,6 @@ public class Cliente {
                                 System.out.println(in.readLine());
                                 break;
                             }
-
                             case 4: {
                                 System.out.println("Email do candidato a ser deletado: ");
                                 String email = scanner.nextLine();
@@ -122,8 +131,196 @@ public class Cliente {
                                 System.out.println(in.readLine());
                                 break;
                             }
-
                             case 5: {
+                                System.out.println("Email: ");
+                                String email = scanner.nextLine();
+                                System.out.println("Token: ");
+                                String token = scanner.nextLine();
+
+                                Map<String, String> jsonFields = new HashMap<>();
+                                jsonFields.put("email", email);
+                                jsonFields.put("token", token);
+                                jsonFields.put("operacao", "cadastrarCompetenciaExperiencia");
+
+                                ObjectMapper mapper = new ObjectMapper();
+                                ArrayNode competenciasExperiencias = mapper.createArrayNode();
+
+                                List<String> competenciasFixas = CompetenciaService.getCompetenciasFixas();
+                                System.out.println("Escolha uma competência entre as opções: " + competenciasFixas);
+
+                                while (true) {
+                                    System.out.println("Digite a competência (ou 'sair' para finalizar):");
+                                    String competencia = scanner.nextLine();
+                                    if (competencia.equalsIgnoreCase("sair")) {
+                                        break;
+                                    }
+
+                                    if (!competenciasFixas.contains(competencia)) {
+                                        System.out.println("Competência inválida. Tente novamente.");
+                                        continue;
+                                    }
+
+                                    System.out.println("Digite os anos de experiência:");
+                                    int experiencia = scanner.nextInt();
+                                    scanner.nextLine();
+
+                                    ObjectNode competenciaExperiencia = mapper.createObjectNode();
+                                    competenciaExperiencia.put("competencia", competencia);
+                                    competenciaExperiencia.put("experiencia", experiencia);
+
+                                    competenciasExperiencias.add(competenciaExperiencia);
+                                }
+                                jsonFields.put("competenciaExperiencia", String.valueOf(competenciasExperiencias));
+
+                                out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
+                                break;
+                            }
+                            case 6: {
+                                System.out.println("Email: ");
+                                String email = scanner.nextLine();
+                                System.out.println("Token: ");
+                                String token = scanner.nextLine();
+
+                                Map<String, String> jsonFields = new HashMap<>();
+                                jsonFields.put("email", email);
+                                jsonFields.put("token", token);
+                                jsonFields.put("operacao", "visualizarCompetenciaExperiencia");
+
+                                out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
+                                break;
+                            }
+                            case 7: {
+                                System.out.println("Email: ");
+                                String email = scanner.nextLine();
+                                System.out.println("Token: ");
+                                String token = scanner.nextLine();
+
+                                Map<String, String> jsonFields = new HashMap<>();
+                                jsonFields.put("email", email);
+                                jsonFields.put("token", token);
+                                jsonFields.put("operacao", "atualizarCompetenciaExperiencia");
+
+                                ObjectMapper mapper = new ObjectMapper();
+                                ArrayNode competenciasExperiencias = mapper.createArrayNode();
+
+                                List<String> competenciasFixas = CompetenciaService.getCompetenciasFixas();
+                                System.out.println("Escolha uma competência entre as opções: " + competenciasFixas);
+
+                                boolean continueAdding = true;
+                                while (continueAdding) {
+                                    System.out.println("Digite a competência:");
+                                    String competenciaAtual = scanner.nextLine();
+
+                                    if (!competenciasFixas.contains(competenciaAtual)) {
+                                        System.out.println("Competência inválida. Tente novamente:");
+                                        continue;
+                                    }
+
+                                    System.out.println("Digite os anos de experiência a serem atualizados:");
+                                    int experiencia;
+                                    try {
+                                        experiencia = scanner.nextInt();
+                                        scanner.nextLine();
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Entrada inválida para experiência. Deve ser um número. Tente novamente.");
+                                        continue;
+                                    }
+
+                                    ObjectNode competenciaExperiencia = mapper.createObjectNode();
+                                    competenciaExperiencia.put("competencia", competenciaAtual);
+                                    competenciaExperiencia.put("experiencia", experiencia);
+                                    competenciasExperiencias.add(competenciaExperiencia);
+
+                                    System.out.println("Deseja adicionar ou atualizar outra competência? (sim/não)");
+                                    String resposta = scanner.nextLine();
+                                    if (!resposta.equalsIgnoreCase("sim")) {
+                                        continueAdding = false;
+                                    }
+                                }
+
+                                jsonFields.put("competenciaExperiencia", String.valueOf(competenciasExperiencias));
+                                out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
+                                break;
+                            }
+                            case 8: {
+                                System.out.println("Email: ");
+                                String email = scanner.nextLine();
+                                System.out.println("Token: ");
+                                String token = scanner.nextLine();
+
+                                Map<String, String> jsonFields = new HashMap<>();
+                                jsonFields.put("email", email);
+                                jsonFields.put("token", token);
+                                jsonFields.put("operacao", "apagarCompetenciaExperiencia");
+
+                                ObjectMapper mapper = new ObjectMapper();
+                                ArrayNode competenciasExperiencias = mapper.createArrayNode();
+
+                                boolean continueAdding = true;
+                                while (continueAdding) {
+                                    System.out.println("Digite a competência a ser deletada:");
+                                    String competencia = scanner.nextLine();
+
+                                    System.out.println("Digite os anos de experiência para a competência " + competencia + ":");
+                                    int experiencia;
+                                    try {
+                                        experiencia = scanner.nextInt();
+                                        scanner.nextLine();
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Entrada inválida para experiência. Deve ser um número. Tente novamente.");
+                                        continue;
+                                    }
+
+                                    ObjectNode competenciaExperiencia = mapper.createObjectNode();
+                                    competenciaExperiencia.put("competencia", competencia.trim());
+                                    competenciaExperiencia.put("experiencia", experiencia);
+
+                                    competenciasExperiencias.add(competenciaExperiencia);
+
+                                    System.out.println("Deseja adicionar outra competência para deletar? (sim/não)");
+                                    String resposta = scanner.nextLine();
+                                    if (!resposta.equalsIgnoreCase("sim")) {
+                                        continueAdding = false;
+                                    }
+                                }
+
+                                jsonFields.put("competenciaExperiencia", String.valueOf(competenciasExperiencias));
+                                out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
+                                break;
+                            }
+                            case 9: {
+                                System.out.println("Token: ");
+                                String token = scanner.nextLine();
+
+                                Map<String, String> jsonFields = new HashMap<>();
+                                jsonFields.put("token", token);
+                                jsonFields.put("operacao", "filtrarVagas");
+
+                                ObjectMapper mapper = new ObjectMapper();
+                                ObjectNode filtrosNode = mapper.createObjectNode();
+                                ArrayNode competenciasNode = filtrosNode.putArray("competencias");
+
+                                System.out.println("Digite as competências para filtrar (separadas por vírgula):");
+                                String competenciasInput = scanner.nextLine();
+                                String[] competenciasArray = competenciasInput.split(",");
+                                for (String competencia : competenciasArray) {
+                                    competenciasNode.add(competencia.trim());
+                                }
+
+                                System.out.println("Digite o tipo de filtro (AND/OR):");
+                                String tipo = scanner.nextLine();
+                                filtrosNode.put("tipo", tipo);
+
+                                jsonFields.put("filtros", String.valueOf(filtrosNode));
+                                out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
+                                break;
+                            }
+                            case 10: {
                                 System.out.println("Email: ");
                                 String email = scanner.nextLine();
                                 System.out.println("Senha: ");
@@ -138,8 +335,7 @@ public class Cliente {
                                 System.out.println(in.readLine());
                                 break;
                             }
-
-                            case 6: {
+                            case 11: {
                                 System.out.println("Token: ");
                                 String email = scanner.nextLine();
 
@@ -151,8 +347,7 @@ public class Cliente {
                                 System.out.println(in.readLine());
                                 break;
                             }
-
-                            case 7: {
+                            case 12: {
                                 System.out.println("Fechando conexão e desligando servidor");
                                 return;
                             }
@@ -169,9 +364,15 @@ public class Cliente {
                         System.out.println("2. Vizualizar empresa");
                         System.out.println("3. Atualizar candidato");
                         System.out.println("4. Deletar candidato");
-                        System.out.println("5. login");
-                        System.out.println("6. logout");
-                        System.out.println("7. Encerrar aplicação");
+                        System.out.println("5. cadastrar vaga");
+                        System.out.println("6. visualizar Vaga");
+                        System.out.println("7. Atualizar Vaga");
+                        System.out.println("8. Apagar Vaga");
+                        System.out.println("9. Listar Vaga");
+                        System.out.println("10. Filtrar Vaga");
+                        System.out.println("11. login");
+                        System.out.println("12. logout");
+                        System.out.println("13. Encerrar aplicação");
                         System.out.print("Digite a opção: ");
                         int choice = scanner.nextInt();
                         scanner.nextLine();
@@ -259,35 +460,203 @@ public class Cliente {
                             case 5: {
                                 System.out.println("Email: ");
                                 String email = scanner.nextLine();
-                                System.out.println("Senha: ");
-                                String password = scanner.nextLine();
+                                System.out.println("Token: ");
+                                String token = scanner.nextLine();
 
                                 Map<String, String> jsonFields = new HashMap<>();
                                 jsonFields.put("email", email);
-                                jsonFields.put("senha", password);
-                                jsonFields.put("operacao", "loginEmpresa");
+                                jsonFields.put("token", token);
+                                jsonFields.put("operacao", "cadastrarVaga");
 
+                                System.out.println("Digite o nome da vaga:");
+                                jsonFields.put("nome", scanner.nextLine());
+
+                                System.out.println("Digite a faixa salarial:");
+                                jsonFields.put("faixaSalarial", scanner.nextLine());
+
+                                System.out.println("Digite a descrição da vaga:");
+                                jsonFields.put("descricao", scanner.nextLine());
+
+                                System.out.println("Digite o estado da vaga (Disponível/Divulgavel):");
+                                jsonFields.put("estado", scanner.nextLine());
+
+                                ObjectMapper mapper = new ObjectMapper();
+                                ArrayNode competenciasArray = mapper.createArrayNode();
+
+                                System.out.println("Digite as competências da vaga (separadas por vírgula):");
+                                String[] competencias = scanner.nextLine().split(",");
+                                for (String competencia : competencias) {
+                                    competenciasArray.add(competencia.trim());
+                                }
+
+                                jsonFields.put("competencias", String.valueOf(competenciasArray));
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
                                 System.out.println(in.readLine());
                                 break;
                             }
                             case 6: {
+                                System.out.println("Email: ");
+                                String email = scanner.nextLine();
                                 System.out.println("Token: ");
                                 String token = scanner.nextLine();
 
                                 Map<String, String> jsonFields = new HashMap<>();
+                                jsonFields.put("email", email);
                                 jsonFields.put("token", token);
-                                jsonFields.put("operacao", "logout");
+                                jsonFields.put("operacao", "visualizarVaga");
+
+                                System.out.println("Digite o ID da vaga:");
+                                String idVaga = scanner.nextLine();
+                                jsonFields.put("idVaga", idVaga);
 
                                 out.println(JsonMiddleware.mapToJson(jsonFields));
                                 System.out.println(in.readLine());
                                 break;
                             }
-
                             case 7: {
-                                System.out.println("Fechando conexão e desligando servidor");
-                                return;
+                                System.out.println("Email: ");
+                                String email = scanner.nextLine();
+                                System.out.println("Token: ");
+                                String token = scanner.nextLine();
+
+                                ObjectMapper mapper = new ObjectMapper();
+                                ObjectNode json = mapper.createObjectNode();
+                                json.put("email", email);
+                                json.put("token", token);
+                                json.put("operacao", "visualizarVaga");
+
+
+                                System.out.println("Digite o ID da vaga:");
+                                int idVaga = scanner.nextInt();
+                                scanner.nextLine();
+
+                                System.out.println("Digite o novo nome da vaga:");
+                                String novoNome = scanner.nextLine();
+
+                                System.out.println("Digite a nova faixa salarial da vaga:");
+                                double novaFaixaSalarial = scanner.nextDouble();
+                                scanner.nextLine();
+
+                                System.out.println("Digite a nova descrição da vaga:");
+                                String novaDescricao = scanner.nextLine();
+
+                                System.out.println("Digite o novo estado da vaga: Disponível / Divulgavel");
+                                String novoEstado = scanner.nextLine();
+
+                                System.out.println("Digite as novas competências (separadas por vírgula):");
+                                String competenciasInput = scanner.nextLine();
+                                String[] competenciasArray = competenciasInput.split(",");
+
+
+                                json.put("operacao", "atualizarVaga");
+                                json.put("idVaga", String.valueOf(idVaga));
+                                json.put("nome", novoNome);
+                                json.put("faixaSalarial", String.valueOf(novaFaixaSalarial)); // Corrigido para usar double
+                                json.put("descricao", novaDescricao);
+                                json.put("estado", novoEstado);
+
+                                ArrayNode competenciasJsonArray = json.putArray("competencias");
+                                for (String competencia : competenciasArray) {
+                                    competenciasJsonArray.add(competencia.trim());
+                                }
+
+                                out.println(json.toString());
+                                break;
                             }
+                            case 8: {
+                                System.out.println("Email: ");
+                                String email = scanner.nextLine();
+                                System.out.println("Token: ");
+                                String token = scanner.nextLine();
+
+                                Map<String, String> jsonFields = new HashMap<>();
+                                jsonFields.put("email", email);
+                                jsonFields.put("token", token);
+                                jsonFields.put("operacao", "apagarVaga");
+
+                                System.out.println("Digite o ID da vaga que deseja deletar:");
+                                String idVaga = scanner.nextLine();
+
+                                jsonFields.put("idVaga", idVaga);
+
+                                out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
+                                break;
+                            }
+                            case 9: {
+                                System.out.println("Email: ");
+                                String email = scanner.nextLine();
+                                System.out.println("Token: ");
+                                String token = scanner.nextLine();
+
+                                Map<String, String> jsonFields = new HashMap<>();
+                                jsonFields.put("email", email);
+                                jsonFields.put("token", token);
+                                jsonFields.put("operacao", "listarVagas");
+
+                                out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
+                                break;
+                            }
+                            case 10: {
+                                System.out.println("Token: ");
+                                String token = scanner.nextLine();
+
+                                Map<String, String> jsonFields = new HashMap<>();
+                                jsonFields.put("token", token);
+                                jsonFields.put("operacao", "filtrarVagas");
+
+                                ObjectMapper mapper = new ObjectMapper();
+                                ObjectNode filtrosNode = mapper.createObjectNode();
+                                ArrayNode competenciasNode = filtrosNode.putArray("competencias");
+
+                                System.out.println("Digite as competências para filtrar (separadas por vírgula):");
+                                String competenciasInput = scanner.nextLine();
+                                String[] competenciasArray = competenciasInput.split(",");
+                                for (String competencia : competenciasArray) {
+                                    competenciasNode.add(competencia.trim());
+                                }
+
+                                System.out.println("Digite o tipo de filtro (AND/OR):");
+                                String tipo = scanner.nextLine();
+                                filtrosNode.put("tipo", tipo);
+
+                                jsonFields.put("filtros", String.valueOf(filtrosNode));
+                                out.println(JsonMiddleware.mapToJson(jsonFields));
+                                System.out.println(in.readLine());
+                                break;
+                            }
+//                            case 5: {
+//                                System.out.println("Email: ");
+//                                String email = scanner.nextLine();
+//                                System.out.println("Senha: ");
+//                                String password = scanner.nextLine();
+//
+//                                Map<String, String> jsonFields = new HashMap<>();
+//                                jsonFields.put("email", email);
+//                                jsonFields.put("senha", password);
+//                                jsonFields.put("operacao", "loginEmpresa");
+//
+//                                out.println(JsonMiddleware.mapToJson(jsonFields));
+//                                System.out.println(in.readLine());
+//                                break;
+//                            }
+//                            case 6: {
+//                                System.out.println("Token: ");
+//                                String token = scanner.nextLine();
+//
+//                                Map<String, String> jsonFields = new HashMap<>();
+//                                jsonFields.put("token", token);
+//                                jsonFields.put("operacao", "logout");
+//
+//                                out.println(JsonMiddleware.mapToJson(jsonFields));
+//                                System.out.println(in.readLine());
+//                                break;
+//                            }
+//                            case 7: {
+//                                System.out.println("Fechando conexão e desligando servidor");
+//                                return;
+//                            }
                             default: {
                                 System.out.println("Opção inválida");
                                 break;

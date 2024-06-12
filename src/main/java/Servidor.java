@@ -1,10 +1,14 @@
 import Middlewares.JsonMiddleware;
+import Model.CompetenciaExperiencia;
 import Model.Empress;
 import Model.ResponseEntities.MessageResponseEntity;
 import Model.ResponseEntities.ResponseEntity;
+import Model.User;
+import Services.CompetenciaService;
 import Services.EmpressService;
 import Services.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -57,6 +61,32 @@ public class Servidor {
                     case "apagarCandidato": {
                         out.println(userService.deleteUser(node));
                         break;
+                    }
+                    case "cadastrarCompetenciaExperiencia": {
+                        String email = node.get("email").asText();
+                        String token = node.get("token").asText();
+
+                        System.out.println(node);
+
+//                        ArrayNode competenciasArray = (ArrayNode) node.get("competenciaExperiencia");
+//                        for (JsonNode competenciaNode : competenciasArray) {
+//                            String competencia = competenciaNode.get("competencia").asText();
+//                            int experiencia = competenciaNode.get("experiencia").asInt();
+//
+//                            if (CompetenciaService.isCompetenciaValida(competencia)) {
+//                                CompetenciaExperiencia competenciaExperiencia = new CompetenciaExperiencia();
+//                                competenciaExperiencia.setCompetencia(competencia);
+//                                competenciaExperiencia.setExperiencia(experiencia);
+//                                competenciaExperiencia.setCandidato(user);
+//
+//                                session.save(competenciaExperiencia);session.save(competenciaExperiencia);
+//                            } else {
+//                                responseNode.put("status", 400);
+//                                responseNode.put("mensagem", "Competência inválida: " + competencia);
+//                                responseWriter.println(responseNode.toString());
+//                                return;
+//                            }
+//                        }
                     }
                     case "loginCandidato": {
                         out.println(userService.userLogin(node.get("email").asText(), node.get("senha").asText()));

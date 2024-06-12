@@ -1,78 +1,56 @@
 package Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
-import java.util.Objects;
+import java.io.Serializable;
 
 @Entity
-@Table(name = "competencia_experienca")
-public class CompetenciaExperiencia {
-
+@Table(name = "competencia_experiencia")
+public class CompetenciaExperiencia implements Serializable {
     @Id
-    @Column(name = "id", length = 36, nullable = false)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "titulo", length = 50, nullable = false)
-    private String titulo;
+    @Column(name = "competencia")
+    private String competencia;
 
-    @Column(name = "experiencia", nullable = false)
-    private String experiencia;
+    @Column(name = "experiencia")
+    private int experiencia;
 
-    public CompetenciaExperiencia(String id, String titulo, String experiencia) {
-        this.id = id;
-        this.titulo = titulo;
-        this.experiencia = experiencia;
+    @ManyToOne
+    @JoinColumn(name = "emailCandidato", nullable = false, referencedColumnName = "email")
+    private User candidato;
+
+    // Getters e Setters
+    public void setId(String id) {
+        this.id = Long.valueOf(String.valueOf(Long.valueOf(id)));
     }
 
-    public CompetenciaExperiencia() {
-    }
-
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getCompetencia() {
+        return competencia;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public void setCompetencia(String competencia) {
+        this.competencia = competencia;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public String getExperiencia() {
+    public int getExperiencia() {
         return experiencia;
     }
 
-    public void setExperiencia(String experiencia) {
+    public void setExperiencia(int experiencia) {
         this.experiencia = experiencia;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CompetenciaExperiencia that = (CompetenciaExperiencia) o;
-        return Objects.equals(id, that.id) && Objects.equals(titulo, that.titulo) && Objects.equals(experiencia, that.experiencia);
+    public User getCandidato() {
+        return candidato;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, titulo, experiencia);
-    }
-
-    @Override
-    public String toString() {
-        return "CompetenciaExperiencia{" +
-                "id='" + id + '\'' +
-                ", titulo='" + titulo + '\'' +
-                ", experiencia='" + experiencia + '\'' +
-                '}';
+    public void setCandidato(User candidato) {
+        this.candidato = candidato;
     }
 }

@@ -7,15 +7,18 @@
 
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
-    <class>Model.Endereco</class>
     <class>Model.User</class>
+    <class>Model.Empress</class>
+    <class>Model.CompetenciaExperiencia</class>
+    <class>Model.Vaga</class>
+    <class>Model.VagaCompetencia</class>
 
     <properties>
         <!-- Database connection settings -->
         <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
         <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost/projeto-sd" />
         <property name="jakarta.persistence.jdbc.user" value="root" />
-        <property name="jakarta.persistence.jdbc.password" value="root" />
+        <property name="jakarta.persistence.jdbc.password" value="" />
 
         <!-- Automatically export the schema -->
         <property name="hibernate.hbm2ddl.auto" value="update" />
