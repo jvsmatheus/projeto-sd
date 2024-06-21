@@ -1,3 +1,4 @@
+
 import Middlewares.JsonMiddleware;
 import Services.CompetenciaService;
 import Services.UserService;
@@ -17,12 +18,11 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Cliente {
-
+    
     public static void main(String[] args) {
         String serverHostname = "192.168.1.2";
         System.out.println("Attempting to connect to host " + serverHostname + " on port 22222.");
 
-        UserService userService = new UserService();
 
         try (Socket socket = new Socket(serverHostname, 22222);
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
