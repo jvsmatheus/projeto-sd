@@ -51,7 +51,7 @@ public class Servidor {
                         break;
                     }
                     case "visualizarCandidato": {
-                        out.println(userService.getUserByEmail(node));
+                        out.println(userService.vizualizarCandidato(node.get("email").asText()));
                         break;
                     }
                     case "atualizarCandidato": {

@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.json.JSONObject;
+
 public class UserService {
 
     private final UserDAO userDAO = new UserDAO();
@@ -43,25 +45,25 @@ public class UserService {
         }
     }
 
-    public String getUserByEmail(JsonNode node) throws JsonProcessingException {
-        User user = userDAO.getUserByEmail(node.get("email").asText());
-
+    public JSONObject vizualizarCandidato(String email) throws JsonProcessingException {
+        User user = userDAO.getUserByEmail(email);
+        
+        JSONObject json = new JSONObject();
+        
         if (Objects.isNull(user)) {
-            return JsonMiddleware.objectToJson(new MessageResponseEntity(404, "vizualizarCandidato", "E-mail não encontrado"));
+            json.put("mensagem", "E-mail não encontrado");
+            json.put("status", 404);
+            json.put("operacao", "visualizarCandidato");
+            
+            return json;
         }
-
-        if (user.isLogado()) {
-            ObjectNode jsonNode = mapper.createObjectNode();
-
-            jsonNode.put("operacao", "vizualizarCandidato");
-            jsonNode.put("status", "201");
-            jsonNode.put("nome", user.getNome());
-            jsonNode.put("senha", user.getSenha());
-
-            return mapper.writeValueAsString(jsonNode);
-        }
-
-        return JsonMiddleware.objectToJson(new MessageResponseEntity(401, "vizualizarCandidato", "Não autorizado"));
+        
+        json.put("nome", user.getNome());
+        json.put("senha", user.getSenha());
+        json.put("status", 201);
+        json.put("operacao", "visualizarCandidato");
+        
+        return json;
     }
 
     // Não está atualizando
