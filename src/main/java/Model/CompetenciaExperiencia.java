@@ -1,12 +1,18 @@
 package Model;
 
-import jakarta.persistence.*;
-
-import java.io.Serializable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "competencia_experiencia")
-public class CompetenciaExperiencia implements Serializable {
+public class CompetenciaExperiencia {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,7 +25,7 @@ public class CompetenciaExperiencia implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "emailCandidato", nullable = false, referencedColumnName = "email")
-    private User candidato;
+    private Candidato candidato;
 
     // Getters e Setters
     public void setId(String id) {
@@ -46,11 +52,11 @@ public class CompetenciaExperiencia implements Serializable {
         this.experiencia = experiencia;
     }
 
-    public User getCandidato() {
+    public Candidato getCandidato() {
         return candidato;
     }
 
-    public void setCandidato(User candidato) {
+    public void setCandidato(Candidato candidato) {
         this.candidato = candidato;
     }
 }

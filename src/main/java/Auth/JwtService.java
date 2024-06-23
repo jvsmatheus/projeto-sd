@@ -1,6 +1,6 @@
 package Auth;
 
-import Model.User;
+import Model.Candidato;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -18,7 +18,7 @@ public class JwtService {
         return BCrypt.checkpw(password, hashedPassword);
     }
 
-    public static boolean authenticate(User user, String password) {
+    public static boolean authenticate(Candidato user, String password) {
         // Simulate retrieving the hashed password from a database
         String storedHashedPassword = user.getSenha();
 

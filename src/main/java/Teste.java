@@ -1,8 +1,8 @@
 //import config.JpaConfiguration;
 
 import Auth.JwtService;
-import DAO.UserDAO;
-import Model.User;
+import DAO.CandidatoDAO;
+import Model.Candidato;
 
 import java.io.IOException;
 
@@ -20,7 +20,7 @@ public class Teste {
 
         // Fechando o contexto ao finalizar a aplicação
 //        context.close();
-        User user = new User("Matheus", "matheus@gmail.com", "12345");
+        Candidato user = new Candidato("Matheus", "matheus@gmail.com", "12345");
 //        User user2 = new User("Matheus", "matheus222@gmail.com", "12345");
 //        User user2 = new User("João", "42999935401");
 //        User user3 = new User("Pedro", "42999935401");
@@ -32,7 +32,7 @@ public class Teste {
 //        Cliente.iniciar(user);
 //        System.out.println(objectToJson(user));
 
-        UserDAO userDAO = new UserDAO();
+        CandidatoDAO userDAO = new CandidatoDAO();
 
 //        System.out.println(userDAO.createUser(user));
 //

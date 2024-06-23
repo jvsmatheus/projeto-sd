@@ -1,20 +1,20 @@
 package DAO;
 
-import Model.User;
-import jakarta.persistence.NoResultException;
-import Middlewares.HibernateUtils;
-
 import java.util.List;
 
-public class UserDAO {
+import Middlewares.HibernateUtils;
+import Model.Candidato;
+import jakarta.persistence.NoResultException;
+
+public class CandidatoDAO {
 
     HibernateUtils db = new HibernateUtils();
 
-    public List<User> getAllUsers() {
-        return db.getManager().createQuery("FROM User u", User.class).getResultList();
+    public List<Candidato> getAllCandidatos() {
+        return db.getManager().createQuery("FROM Candidato u", Candidato.class).getResultList();
     }
 
-    public Boolean createUser(User user) {
+    public Boolean cadastrarCandidato(Candidato user) {
         try {
             db.getManager().getTransaction().begin();
             db.getManager().persist(user);
@@ -26,24 +26,24 @@ public class UserDAO {
         return false;
     }
 
-    public Boolean updateUser(String email, User newUserDetails) {
+    public Boolean atualizarCandidato(String email, Candidato newCandidatoDetails) {
         try {
             db.getManager().getTransaction().begin(); // Inicia uma transação
 
-            User existingUser = getUserByEmail(email);
+            Candidato existingCandidato = getCandidatoByEmail(email);
 
-            if (existingUser == null) {
+            if (existingCandidato == null) {
                 db.getManager().getTransaction().rollback(); // Desfaz a transação se o usuário não for encontrado
                 return false; // Retorna false se o usuário não for encontrado
             }
 
             // Atualiza os dados do usuário com os novos detalhes
-            existingUser.setNome(newUserDetails.getNome());
-            existingUser.setEmail(newUserDetails.getEmail());
-            existingUser.setSenha(newUserDetails.getSenha());
+            existingCandidato.setNome(newCandidatoDetails.getNome());
+            existingCandidato.setEmail(newCandidatoDetails.getEmail());
+            existingCandidato.setSenha(newCandidatoDetails.getSenha());
             // Adicione outros campos conforme necessário
 
-            User mergedUser = db.getManager().merge(existingUser); // Atualiza o usuário
+            Candidato mergedCandidato = db.getManager().merge(existingCandidato); // Atualiza o usuário
             db.getManager().flush(); // Garante que as alterações são "flushadas" para o banco de dados
             db.getManager().getTransaction().commit(); // Completa a transação com um commit
 
@@ -57,11 +57,11 @@ public class UserDAO {
         return false; // Retorna falso se a operação falhar
     }
 
-    public Boolean deleteUser(String email) {
+    public Boolean apagarCandidato(String email) {
         try {
             db.getManager().getTransaction().begin(); // Inicia uma transação
 
-            User user =  getUserByEmail(email); // Busca o usuário pelo email
+            Candidato user =  getCandidatoByEmail(email); // Busca o usuário pelo email
             if (user == null) {
                 return false; // Retorna false se o usuário não for encontrado
             }
@@ -76,10 +76,10 @@ public class UserDAO {
         return false; // Retorna falso se a operação falhar
     }
 
-    public User getUserByEmail(String email) {
+    public Candidato getCandidatoByEmail(String email) {
         try {
-            String query = "SELECT u FROM User u WHERE u.email = :email"; // Cria a consulta JPQL
-            User user = db.getManager().createQuery(query, User.class)
+            String query = "SELECT u FROM Candidato u WHERE u.email = :email"; // Cria a consulta JPQL
+            Candidato user = db.getManager().createQuery(query, Candidato.class)
                     .setParameter("email", email) // Define o parâmetro de e-mail
                     .getSingleResult(); // Executa a consulta e retorna o resultado único
             return user; // Retorna o usuário encontrado
@@ -90,10 +90,10 @@ public class UserDAO {
             return null;
         }
     }
-    public User getUSerById(String id) {
+    public Candidato getCandidatoById(String id) {
         try {
-            String query = "SELECT u FROM User u WHERE u.id = :id"; // Cria a consulta JPQL
-            return db.getManager().createQuery(query, User.class)
+            String query = "SELECT u FROM Candidato u WHERE u.id = :id"; // Cria a consulta JPQL
+            return db.getManager().createQuery(query, Candidato.class)
                     .setParameter("id", id) // Define o parâmetro de e-mail
                     .getSingleResult(); // Retorna o usuário encontrado
         } catch (NoResultException nre) {

@@ -7,8 +7,8 @@
 
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
-    <class>Model.User</class>
-    <class>Model.Empress</class>
+    <class>Model.Candidato</class>
+    <class>Model.Empresa</class>
     <class>Model.CompetenciaExperiencia</class>
     <class>Model.Vaga</class>
     <class>Model.VagaCompetencia</class>

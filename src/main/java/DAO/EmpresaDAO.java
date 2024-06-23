@@ -1,20 +1,20 @@
 package DAO;
 
 import Middlewares.HibernateUtils;
-import Model.Empress;
+import Model.Empresa;
 import jakarta.persistence.NoResultException;
 
 import java.util.List;
 
-public class EmpressDAO {
+public class EmpresaDAO {
 
     HibernateUtils db = new HibernateUtils();
 
-    public List<Empress> getAllEmpresss() {
-        return db.getManager().createQuery("FROM Empress u", Empress.class).getResultList();
+    public List<Empresa> getAllEmpresas() {
+        return db.getManager().createQuery("FROM Empresa u", Empresa.class).getResultList();
     }
 
-    public Boolean createEmpress(Empress empress) {
+    public Boolean createEmpresa(Empresa empress) {
         try {
             db.getManager().getTransaction().begin();
             db.getManager().persist(empress);
@@ -26,25 +26,24 @@ public class EmpressDAO {
         return false;
     }
 
-    public Boolean updateEmpress(String email, Empress newEmpressDetails) {
+    public Boolean atualizarEmpresa(String email, Empresa newEmpresaDetails) {
         try {
             db.getManager().getTransaction().begin(); // Inicia uma transação
 
-            Empress existingEmpress = getEmpressByEmail(email);// Busca o usuário pelo ID
-            System.out.println(existingEmpress);
-            if (existingEmpress == null) {
+            Empresa existingEmpresa = getEmpresaByEmail(email);// Busca o usuário pelo ID
+            if (existingEmpresa == null) {
                 return false; // Retorna false se o usuário não for encontrado
             }
 
             // Atualiza os dados do usuário com os novos detalhes
-            existingEmpress.setRazaoSocial(newEmpressDetails.getRazaoSocial());
-            existingEmpress.setEmail(newEmpressDetails.getEmail());
-            existingEmpress.setCnpj(newEmpressDetails.getCnpj());
-            existingEmpress.setSenha(newEmpressDetails.getSenha());
-            existingEmpress.setDescricao(newEmpressDetails.getDescricao());
-            existingEmpress.setRamo(newEmpressDetails.getRamo());
+            existingEmpresa.setRazaoSocial(newEmpresaDetails.getRazaoSocial());
+            existingEmpresa.setEmail(newEmpresaDetails.getEmail());
+            existingEmpresa.setCnpj(newEmpresaDetails.getCnpj());
+            existingEmpresa.setSenha(newEmpresaDetails.getSenha());
+            existingEmpresa.setDescricao(newEmpresaDetails.getDescricao());
+            existingEmpresa.setRamo(newEmpresaDetails.getRamo());
 
-            db.getManager().merge(existingEmpress); // Atualiza o usuário
+            db.getManager().merge(existingEmpresa); // Atualiza o usuário
             db.getManager().getTransaction().commit(); // Completa a transação com um commit
             return true; // Retorna verdadeiro se a operação foi bem-sucedida
         } catch (Exception ex) {
@@ -54,11 +53,11 @@ public class EmpressDAO {
         return false; // Retorna falso se a operação falhar
     }
 
-    public Boolean deleteEmpress(String email) {
+    public Boolean apagarEmpresa(String email) {
         try {
             db.getManager().getTransaction().begin(); // Inicia uma transação
 
-            Empress empress =  getEmpressByEmail(email); // Busca o usuário pelo email
+            Empresa empress =  getEmpresaByEmail(email); // Busca o usuário pelo email
             if (empress == null) {
                 return false; // Retorna false se o usuário não for encontrado
             }
@@ -73,10 +72,10 @@ public class EmpressDAO {
         return false; // Retorna falso se a operação falhar
     }
 
-    public Empress getEmpressByEmail(String email) {
+    public Empresa getEmpresaByEmail(String email) {
         try {
-            String query = "SELECT u FROM Empress u WHERE u.email = :email"; // Cria a consulta JPQL
-            Empress empress = db.getManager().createQuery(query, Empress.class)
+            String query = "SELECT u FROM Empresa u WHERE u.email = :email"; // Cria a consulta JPQL
+            Empresa empress = db.getManager().createQuery(query, Empresa.class)
                     .setParameter("email", email) // Define o parâmetro de e-mail
                     .getSingleResult(); // Executa a consulta e retorna o resultado único
             return empress; // Retorna o usuário encontrado
@@ -87,10 +86,10 @@ public class EmpressDAO {
             return null;
         }
     }
-    public Empress getUSerById(String id) {
+    public Empresa getEmpresaById(String id) {
         try {
-            String query = "SELECT u FROM Empress u WHERE u.id = :id"; // Cria a consulta JPQL
-            return db.getManager().createQuery(query, Empress.class)
+            String query = "SELECT u FROM Empresa u WHERE u.id = :id"; // Cria a consulta JPQL
+            return db.getManager().createQuery(query, Empresa.class)
                     .setParameter("id", id) // Define o parâmetro de e-mail
                     .getSingleResult(); // Retorna o usuário encontrado
         } catch (NoResultException nre) {

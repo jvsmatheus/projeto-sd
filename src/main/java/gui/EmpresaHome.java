@@ -1,11 +1,15 @@
 package gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
@@ -13,27 +17,30 @@ import org.json.JSONObject;
 
 import Cliente.Cliente;
 import Services.CandidatoService;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
-public class CandidatoHome extends JFrame {
+public class EmpresaHome extends JFrame {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-
-    private JTextField txtNome;
+    private JTextField txtRazaoSocial;
     private JTextField txtEmail;
     private JTextField txtSenha;
-
+    private JTextArea txtDescricao;
+    private JLabel lblNewLabel;
+    private JLabel lblNewLabel_1;
+    private JLabel lblNewLabel_2;
     private Cliente cliente;
     private HashMap<String, String> session;
+    private JTextField txtCnpj;
+    private JLabel lblNewLabel_3;
+    private JTextField txtRamo;
 
     CandidatoService service = new CandidatoService();
     private JTextField txtToken;
+    private JLabel lblNewLabel_6;
 
-    public CandidatoHome(Cliente cliente, HashMap<String, String> session) {
-        setTitle("Candidato");
+    public EmpresaHome(Cliente cliente, HashMap<String, String> session) {
+        setTitle("Empresa");
         this.cliente = cliente;
         this.session = session; // Inicializa a variável session recebida como parâmetro
         initComponents();
@@ -44,57 +51,75 @@ public class CandidatoHome extends JFrame {
     }
 
     private void initComponents() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 450, 300);
+    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 377, 420);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        txtNome = new JTextField();
-        txtNome.setBounds(104, 49, 261, 20);
-        contentPane.add(txtNome);
-        txtNome.setColumns(10);
+        txtRazaoSocial = new JTextField();
+        txtRazaoSocial.setBounds(96, 42, 252, 20);
+        contentPane.add(txtRazaoSocial);
+        txtRazaoSocial.setColumns(10);
 
         txtEmail = new JTextField();
-        txtEmail.setBounds(104, 80, 261, 20);
+        txtEmail.setEditable(false);
+        txtEmail.setBounds(96, 73, 252, 20);
         contentPane.add(txtEmail);
         txtEmail.setColumns(10);
 
         txtSenha = new JTextField();
-        txtSenha.setBounds(104, 111, 261, 20);
+        txtSenha.setBounds(96, 135, 252, 20);
         contentPane.add(txtSenha);
         txtSenha.setColumns(10);
 
-        JLabel lblNewLabel = new JLabel("Nome:");
-        lblNewLabel.setBounds(54, 52, 46, 14);
+        lblNewLabel = new JLabel("Razão Social:");
+        lblNewLabel.setBounds(10, 45, 76, 14);
         contentPane.add(lblNewLabel);
 
-        JLabel lblNewLabel_1 = new JLabel("Email:");
-        lblNewLabel_1.setBounds(54, 83, 46, 14);
+        lblNewLabel_1 = new JLabel("Email:");
+        lblNewLabel_1.setBounds(10, 76, 46, 14);
         contentPane.add(lblNewLabel_1);
 
-        JLabel lblNewLabel_2 = new JLabel("Senha:");
-        lblNewLabel_2.setBounds(54, 114, 46, 14);
+        lblNewLabel_2 = new JLabel("Senha:");
+        lblNewLabel_2.setBounds(10, 138, 46, 14);
         contentPane.add(lblNewLabel_2);
+
+        txtCnpj = new JTextField();
+        txtCnpj.setBounds(96, 104, 252, 20);
+        contentPane.add(txtCnpj);
+        txtCnpj.setColumns(10);
         
-        txtToken = new JTextField();
-        txtToken.setBounds(104, 18, 261, 20);
-        contentPane.add(txtToken);
-        txtToken.setColumns(10);
-        
-        JLabel lblNewLabel_3 = new JLabel("Token:");
-        lblNewLabel_3.setBounds(54, 21, 46, 14);
+        lblNewLabel_3 = new JLabel("CNPJ:");
+        lblNewLabel_3.setBounds(10, 107, 46, 14);
         contentPane.add(lblNewLabel_3);
+        
+        txtRamo = new JTextField();
+        txtRamo.setBounds(96, 166, 252, 20);
+        contentPane.add(txtRamo);
+        txtRamo.setColumns(10);
+        
+        JLabel lblNewLabel_4 = new JLabel("Ramo:");
+        lblNewLabel_4.setBounds(10, 169, 46, 14);
+        contentPane.add(lblNewLabel_4);
+        
+        txtDescricao = new JTextArea();
+        txtDescricao.setBounds(96, 197, 252, 111);
+        contentPane.add(txtDescricao);
+        
+        JLabel lblNewLabel_5 = new JLabel("Descrição:");
+        lblNewLabel_5.setBounds(10, 202, 76, 14);
+        contentPane.add(lblNewLabel_5);
         
         JButton btnAtualizar = new JButton("Atualizar");
         btnAtualizar.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		atualizarCandidato();
+        		atualizarEmpresa();
         	}
         });
-        btnAtualizar.setBounds(54, 192, 89, 23);
+        btnAtualizar.setBounds(26, 353, 89, 23);
         contentPane.add(btnAtualizar);
         
         JButton btnDeletar = new JButton("Deletar");
@@ -103,11 +128,11 @@ public class CandidatoHome extends JFrame {
         		apagarCandidato();
         	}
         });
-        btnDeletar.setBounds(157, 192, 109, 23);
+        btnDeletar.setBounds(125, 353, 109, 23);
         contentPane.add(btnDeletar);
         
         JButton btnCadastrarCompetencia = new JButton("Cadastrar Competências");
-        btnCadastrarCompetencia.setBounds(117, 158, 192, 23);
+        btnCadastrarCompetencia.setBounds(82, 319, 192, 23);
         contentPane.add(btnCadastrarCompetencia);
         
         JButton btnLogout = new JButton("Sair");
@@ -116,16 +141,26 @@ public class CandidatoHome extends JFrame {
         		logout();
         	}
         });
-        btnLogout.setBounds(276, 192, 89, 23);
+        btnLogout.setBounds(244, 353, 89, 23);
         contentPane.add(btnLogout);
+        
+        txtToken = new JTextField();
+        txtToken.setEditable(false);
+        txtToken.setBounds(96, 11, 252, 20);
+        contentPane.add(txtToken);
+        txtToken.setColumns(10);
+        
+        lblNewLabel_6 = new JLabel("Token:");
+        lblNewLabel_6.setBounds(10, 14, 46, 14);
+        contentPane.add(lblNewLabel_6);
     }
 
     private void setFields() {
-        // Verifica se session não é null antes de acessar seus valores
 		if (session != null && session.containsKey("email") && session.containsKey("token")) {
+			
 			JSONObject request = new JSONObject();
 			
-			request.put("operacao", "visualizarCandidato");
+			request.put("operacao", "visualizarEmpresa");
 			request.put("email", session.get("email"));
 			request.put("token", session.get("token"));
 			
@@ -136,40 +171,48 @@ public class CandidatoHome extends JFrame {
 		    	this.txtToken.setText(session.get("token"));
 		    	this.txtToken.setEditable(false);
 		    	
-		    	this.txtNome.setText(json.getString("nome"));
+		    	this.txtRazaoSocial.setText(json.getString("razaoSocial"));
 		    	
 			    this.txtEmail.setText(session.get("email"));
 			    this.txtEmail.setEditable(false);
 			    
 			    this.txtSenha.setText(json.getString("senha"));
+			    this.txtCnpj.setText(json.getString("cnpj"));
+			    this.txtDescricao.setText(json.getString("descricao"));
+			    this.txtRamo.setText(json.getString("ramo"));
+			    
 		    } else {
-		    	JOptionPane.showMessageDialog(CandidatoHome.this, json.get("mensagem"), "Erro", JOptionPane.ERROR_MESSAGE);
+		    	JOptionPane.showMessageDialog(EmpresaHome.this, json.get("mensagem"), "Erro", JOptionPane.ERROR_MESSAGE);
 		    }
 		} else {
-		    JOptionPane.showMessageDialog(CandidatoHome.this, "Sessão inválida", "Erro", JOptionPane.ERROR_MESSAGE);
+		    JOptionPane.showMessageDialog(EmpresaHome.this, "Sessão inválida", "Erro", JOptionPane.ERROR_MESSAGE);
 		}
     }
     
-    private void atualizarCandidato() {
+    private void atualizarEmpresa() {
     	if (session != null && session.containsKey("email") && session.containsKey("token")) {
 			JSONObject request = new JSONObject();
 			
-			request.put("operacao", "atualizarCandidato");
+			request.put("operacao", "atualizarEmpresa");
 			request.put("token", session.get("token"));
+			request.put("razaoSocial", this.txtRazaoSocial.getText());
 			request.put("email", session.get("email"));
-			request.put("nome", this.txtNome.getText());
 			request.put("senha", this.txtSenha.getText());
+			request.put("cnpj", this.txtCnpj.getText());
+			request.put("descricao", this.txtDescricao.getText());
+			request.put("ramo", this.txtRamo.getText());
 			
 			String response = cliente.callServer(request);
 		    JSONObject json = new JSONObject(response);
 		    
 		    if (json.getInt("status") == 201) {
 		    	setFields();
+		    	JOptionPane.showMessageDialog(EmpresaHome.this, "Empresa atualizada!", "Sucesso", JOptionPane.YES_NO_CANCEL_OPTION);
 		    } else {
-		    	JOptionPane.showMessageDialog(CandidatoHome.this, json.get("mensagem"), "Erro", JOptionPane.ERROR_MESSAGE);
+		    	JOptionPane.showMessageDialog(EmpresaHome.this, json.get("mensagem"), "Erro", JOptionPane.ERROR_MESSAGE);
 		    }
 		} else {
-		    JOptionPane.showMessageDialog(CandidatoHome.this, "Sessão inválida", "Erro", JOptionPane.ERROR_MESSAGE);
+		    JOptionPane.showMessageDialog(EmpresaHome.this, "Sessão inválida", "Erro", JOptionPane.ERROR_MESSAGE);
 		}
     }
     
@@ -177,7 +220,7 @@ public class CandidatoHome extends JFrame {
     	if (session != null && session.containsKey("email") && session.containsKey("token")) {
 			JSONObject request = new JSONObject();
 			
-			request.put("operacao", "apagarCandidato");
+			request.put("operacao", "apagarEmpresa");
 			request.put("token", session.get("token"));
 			request.put("email", session.get("email"));
 			
@@ -186,13 +229,14 @@ public class CandidatoHome extends JFrame {
 		    
 		    if (json.getInt("status") == 201) {
 		    	session.clear();
-		    	new Login(cliente).setVisible(true);;
+		    	JOptionPane.showMessageDialog(EmpresaHome.this, "Candidato deletado", "Erro", JOptionPane.YES_NO_CANCEL_OPTION);
+		    	new Login(cliente).setVisible(true);
 		    	dispose();
 		    } else {
-		    	JOptionPane.showMessageDialog(CandidatoHome.this, json.get("mensagem"), "Erro", JOptionPane.ERROR_MESSAGE);
+		    	JOptionPane.showMessageDialog(EmpresaHome.this, json.get("mensagem"), "Erro", JOptionPane.ERROR_MESSAGE);
 		    }
 		} else {
-		    JOptionPane.showMessageDialog(CandidatoHome.this, "Sessão inválida", "Erro", JOptionPane.ERROR_MESSAGE);
+		    JOptionPane.showMessageDialog(EmpresaHome.this, "Sessão inválida", "Erro", JOptionPane.ERROR_MESSAGE);
 		}
     }
     
@@ -211,7 +255,7 @@ public class CandidatoHome extends JFrame {
             new Login(cliente).setVisible(true);
             dispose();
         } else {
-            JOptionPane.showMessageDialog(CandidatoHome.this, json.getString("mensagem"), "Erro Login",
+            JOptionPane.showMessageDialog(EmpresaHome.this, json.getString("mensagem"), "Erro Login",
                     JOptionPane.ERROR_MESSAGE);
         }
     }

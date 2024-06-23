@@ -3,6 +3,7 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -26,7 +27,6 @@ public class Login extends JFrame {
     private JTextField txtSenha;
     private JRadioButton rdbtnEmpresa;
     private JRadioButton rdbtnCandidato;
-
     private String tipoLogin;
     private Cliente cliente;
     private HashMap<String, String> session;
@@ -37,12 +37,16 @@ public class Login extends JFrame {
     public Login(Cliente cliente) {
         setTitle("Login");
         this.cliente = cliente;
+        this.session = new HashMap<String, String>();
         initComponents();
+        
+     // Centralizar a janela no monitor
+        setLocationRelativeTo(null);
     }
 
     public void initComponents() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 418, 212);
+        setBounds(100, 100, 353, 212);
         contentPane = new JPanel();
         contentPane.setToolTipText("");
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -59,7 +63,7 @@ public class Login extends JFrame {
             }
         });
         buttonGroup.add(rdbtnEmpresa);
-        rdbtnEmpresa.setBounds(81, 7, 67, 23);
+        rdbtnEmpresa.setBounds(57, 7, 89, 23);
         contentPane.add(rdbtnEmpresa);
 
         rdbtnCandidato = new JRadioButton("Candidato");
@@ -72,25 +76,25 @@ public class Login extends JFrame {
             }
         });
         buttonGroup.add(rdbtnCandidato);
-        rdbtnCandidato.setBounds(218, 7, 75, 23);
+        rdbtnCandidato.setBounds(192, 7, 89, 23);
         contentPane.add(rdbtnCandidato);
 
         txtEmail = new JTextField();
-        txtEmail.setBounds(150, 58, 89, 20);
+        txtEmail.setBounds(88, 58, 210, 20);
         contentPane.add(txtEmail);
         txtEmail.setColumns(10);
 
         JLabel lblNewLabel = new JLabel("Email:");
-        lblNewLabel.setBounds(103, 61, 38, 14);
+        lblNewLabel.setBounds(40, 61, 38, 14);
         contentPane.add(lblNewLabel);
 
         txtSenha = new JTextField();
         txtSenha.setColumns(10);
-        txtSenha.setBounds(150, 89, 89, 20);
+        txtSenha.setBounds(88, 89, 210, 20);
         contentPane.add(txtSenha);
 
         JLabel lblSenha = new JLabel("Senha:");
-        lblSenha.setBounds(103, 92, 38, 14);
+        lblSenha.setBounds(40, 92, 51, 14);
         contentPane.add(lblSenha);
 
         JButton btnLogin = new JButton("Login");
@@ -105,21 +109,29 @@ public class Login extends JFrame {
                     request.put("email", email);
                     request.put("senha", senha);
                     request.put("operacao", "login" + tipoLogin);
-
+                    
                     String response = cliente.callServer(request);
+                    System.out.println(response);
                     JSONObject json = new JSONObject(response);
+                    
+                    
                     if (json.getInt("status") == 200) {
                         if (tipoLogin.equals("Candidato")) {
                             session.put("email", email);
                             session.put("token", json.getString("token"));
                             new CandidatoHome(cliente, session).setVisible(true);
-                        } else {
-                            // Caso para login de Empresa
-                            // session.put("email", email);
-                            // session.put("token", json.getString("token"));
-                            // new EmpresaHome(cliente, session).setVisible(true);
+                            dispose();
                         }
-                        dispose();
+                        else if(tipoLogin.equals("Empresa")) {
+	                        session.put("email", email);
+	                        session.put("token", json.getString("token"));
+	                        new EmpresaHome(cliente, session).setVisible(true);
+	                        dispose();
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(Login.this, "Selecione o tipo de login", "Erro",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
                     } else {
                         JOptionPane.showMessageDialog(Login.this, json.getString("mensagem"), "Erro Login",
                                 JOptionPane.ERROR_MESSAGE);
@@ -130,22 +142,28 @@ public class Login extends JFrame {
                 }
             }
         });
-        btnLogin.setBounds(81, 139, 89, 23);
+        btnLogin.setBounds(40, 139, 106, 23);
         contentPane.add(btnLogin);
 
         JButton btnCadastrar = new JButton("Cadastrar");
         btnCadastrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (tipoLogin != null && tipoLogin.equals("Candidato")) {
+                if (tipoLogin.equals("Candidato")) {
                     new CadastrarCandidato(cliente).setVisible(true);
-                } else {
-                    JOptionPane.showMessageDialog(Login.this, "Selecione Candidato para cadastrar", "Erro",
+                    dispose();
+                }
+                else if(tipoLogin.equals("Empresa")) {
+                	new CadastrarEmpresa(cliente).setVisible(true);
+                    dispose();
+                }
+                else {
+                    JOptionPane.showMessageDialog(Login.this, "Selecione o tipo de cadastro", "Erro",
                             JOptionPane.ERROR_MESSAGE);
                 }
                 dispose();
             }
         });
-        btnCadastrar.setBounds(204, 139, 89, 23);
+        btnCadastrar.setBounds(192, 139, 106, 23);
         contentPane.add(btnCadastrar);
     }
 }

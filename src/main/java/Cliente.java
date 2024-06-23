@@ -1,7 +1,7 @@
 
 import Middlewares.JsonMiddleware;
 import Services.CompetenciaService;
-import Services.UserService;
+import Services.CandidatoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;

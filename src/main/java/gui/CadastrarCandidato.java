@@ -1,22 +1,20 @@
 package gui;
 
-import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import org.json.JSONObject;
 
 import Cliente.Cliente;
-
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.awt.event.ActionEvent;
 
 public class CadastrarCandidato extends JFrame {
 
@@ -39,11 +37,14 @@ public class CadastrarCandidato extends JFrame {
         this.session = new HashMap<>(); // Inicializa a variável session
 
         initComponents();
+        
+     // Centralizar a janela no monitor
+        setLocationRelativeTo(null);
     }
 
     private void initComponents() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 244, 230);
+        setBounds(100, 100, 352, 230);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -51,17 +52,17 @@ public class CadastrarCandidato extends JFrame {
         contentPane.setLayout(null);
 
         txtNome = new JTextField();
-        txtNome.setBounds(78, 11, 126, 20);
+        txtNome.setBounds(78, 11, 252, 20);
         contentPane.add(txtNome);
         txtNome.setColumns(10);
 
         txtEmail = new JTextField();
-        txtEmail.setBounds(78, 42, 126, 20);
+        txtEmail.setBounds(78, 42, 252, 20);
         contentPane.add(txtEmail);
         txtEmail.setColumns(10);
 
         txtSenha = new JTextField();
-        txtSenha.setBounds(78, 73, 126, 20);
+        txtSenha.setBounds(78, 73, 252, 20);
         contentPane.add(txtSenha);
         txtSenha.setColumns(10);
 
@@ -105,7 +106,7 @@ public class CadastrarCandidato extends JFrame {
                 }
             }
         });
-        btnCadastrar.setBounds(66, 141, 89, 23);
+        btnCadastrar.setBounds(84, 143, 169, 23);
         contentPane.add(btnCadastrar);
     }
 

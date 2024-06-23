@@ -20,6 +20,9 @@ public class HomeCliente extends javax.swing.JFrame {
     public HomeCliente() {
     	setTitle("Conexão");
         initComponents();
+        
+     // Centralizar a janela no monitor
+        setLocationRelativeTo(null);
     }
 
     private void initComponents() {

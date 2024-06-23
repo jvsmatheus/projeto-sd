@@ -1,60 +1,79 @@
 package Model;
 
-import jakarta.persistence.*;
-
-import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "vaga")
 public class Vaga {
-
     @Id
-    @Column(name = "id", length = 36, nullable = false)
-    private String token;
-    @Column(name = "nome", length = 200, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "nome")
     private String nome;
-    @Column(name = "faixa_salarial", nullable = false)
-    private Double faixaSalarial;
-    @Column(name = "descricao", nullable = false)
+
+    @Column(name = "faixaSalarial")
+    private double faixaSalarial;
+
+    @Column(name = "descricao")
     private String descricao;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "vaga_id")
-    private List<CompetenciaExperiencia> competencias = new ArrayList<>();
+    @Column(name = "estado")
+    private String estado;
 
-    public Vaga(String token, String nome, Double faixaSalarial, String descricao) {
-        this.token = token;
-        this.nome = nome;
-        this.faixaSalarial = faixaSalarial;
-        this.descricao = descricao;
+    @ManyToOne
+    @JoinColumn(name = "email", referencedColumnName = "email")
+    private Empresa empresa;
+
+    @ElementCollection
+    @CollectionTable(name = "vaga_competencia", joinColumns = @JoinColumn(name = "vaga_id"))
+    @Column(name = "competencia")
+    private List<String> competencias;
+
+    // Getters and Setters
+
+
+    public Long getId() {
+        return id;
     }
 
-    public Vaga() {
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getToken() {
-        return token;
+    public List<String> getCompetencias() {
+        return competencias;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setCompetencias(List<String> competencias) {
+        this.competencias = competencias;
     }
 
-    public String getNome() {
-        return nome;
+    public Empresa getEmpresa() {
+        return empresa;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
     }
 
-    public Double getFaixaSalarial() {
-        return faixaSalarial;
+    public String getEstado() {
+        return estado;
     }
 
-    public void setFaixaSalarial(Double faixaSalarial) {
-        this.faixaSalarial = faixaSalarial;
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public String getDescricao() {
@@ -65,21 +84,19 @@ public class Vaga {
         this.descricao = descricao;
     }
 
-    public List<CompetenciaExperiencia> getCompetencias() {
-        return competencias;
+    public String getNome() {
+        return nome;
     }
 
-    public void setCompetencias(List<CompetenciaExperiencia> competencias) {
-        this.competencias = competencias;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    @Override
-    public String toString() {
-        return "Vaga{" +
-                "token='" + token + '\'' +
-                ", nome='" + nome + '\'' +
-                ", faixaSalarial=" + faixaSalarial +
-                ", descricao='" + descricao + '\'' +
-                '}';
+    public double getFaixaSalarial() {
+        return faixaSalarial;
+    }
+
+    public void setFaixaSalarial(double faixaSalarial) {
+        this.faixaSalarial = faixaSalarial;
     }
 }

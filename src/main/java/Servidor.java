@@ -1,28 +1,36 @@
-import Middlewares.JsonMiddleware;
-import Model.CompetenciaExperiencia;
-import Model.Empress;
-import Model.ResponseEntities.MessageResponseEntity;
-import Model.ResponseEntities.ResponseEntity;
-import Model.User;
-import Services.CompetenciaService;
-import Services.EmpressService;
-import Services.UserService;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Objects;
+
+import org.json.JSONObject;
+
+//import Model.CompetenciaExperiencia;
+//import Model.Empresa;
+//import Model.ResponseEntities.MessageResponseEntity;
+//import Model.ResponseEntities.ResponseEntity;
+//import Model.Candidato;
+//import Services.CompetenciaService;
+//import Services.EmpressService;
+import Services.CandidatoService;
+import Services.EmpresaService;
+import Services.LoginService;
+//import com.fasterxml.jackson.databind.JsonNode;
+//import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class Servidor {
     public static void main(String[] args) throws IOException {
         int port = 22222;
 
-        UserService userService = new UserService();
-        EmpressService empressService = new EmpressService();
+        CandidatoService userService = new CandidatoService();
+        EmpresaService empresaService = new EmpresaService();
+        LoginService loginService = new LoginService();
+        
+        HashMap<String, String> session = new HashMap<String, String>();
 
         System.out.println("Server is listening on port " + port);
 
@@ -43,30 +51,33 @@ public class Servidor {
                     break;
                 }
 
-                JsonNode node = JsonMiddleware.stringToJsonNode(input);
+                JSONObject node = new JSONObject(input);
 
-                switch (node.get("operacao").asText()) {
+                switch (node.getString("operacao")) {
                     case "cadastrarCandidato": {
-                        out.println(userService.createUser(node));
+                    	var response = userService.cadastrarCandidato(node);
+                    	session.put("token", response.getString("token"));
+                    	session.put("email", node.getString("email"));
+                        out.println(response);
                         break;
                     }
                     case "visualizarCandidato": {
-                        out.println(userService.vizualizarCandidato(node.get("email").asText()));
+                        out.println(userService.vizualizarCandidato(node));
                         break;
                     }
                     case "atualizarCandidato": {
-                        out.println(userService.updateUser(node));
+                        out.println(userService.atualizarCandidato(node));
                         break;
                     }
                     case "apagarCandidato": {
-                        out.println(userService.deleteUser(node));
+                        out.println(userService.apagarCandidato(node));
                         break;
                     }
-                    case "cadastrarCompetenciaExperiencia": {
-                        String email = node.get("email").asText();
-                        String token = node.get("token").asText();
-
-                        System.out.println(node);
+//                    case "cadastrarCompetenciaExperiencia": {
+//                        String email = node.get("email").asText();
+//                        String token = node.get("token").asText();
+//
+//                        System.out.println(node);
 
 //                        ArrayNode competenciasArray = (ArrayNode) node.get("competenciaExperiencia");
 //                        for (JsonNode competenciaNode : competenciasArray) {
@@ -87,49 +98,38 @@ public class Servidor {
 //                                return;
 //                            }
 //                        }
-                    }
-                    case "loginCandidato": {
-                        out.println(userService.userLogin(node.get("email").asText(), node.get("senha").asText()));
-                        break;
-                    }
-
+//                    }
                     case "cadastrarEmpresa": {
-                        out.println(empressService.createEmpress(node));
+                        out.println(empresaService.cadastarEmpresa(node));
                         break;
                     }
                     case "visualizarEmpresa": {
-                        out.println(empressService.getEmpressByEmail(node));
+                        out.println(empresaService.getEmpresaByEmail(node));
                         break;
                     }
                     case "atualizarEmpresa": {
-                        Empress empress = new Empress();
-                        empress.setRazaoSocial(node.get("razaoSocial").asText());
-                        empress.setEmail(node.get("email").asText());
-                        empress.setCnpj(node.get("cnpj").asText());
-                        empress.setSenha(node.get("senha").asText());
-                        empress.setDescricao(node.get("descricao").asText());
-                        empress.setRamo(node.get("ramo").asText());
-
-                        boolean success = empressService.updateEmpress(empress.getEmail(), empress);
-                        if (success) {
-                            out.println(JsonMiddleware.objectToJson(new ResponseEntity(201, "atualizarEmpresa")));
-                        } else {
-                            out.println(JsonMiddleware.objectToJson(new MessageResponseEntity(404, "atualizarEmpresa", "E-mail não encontrado")));
-                        }
+                        out.println(empresaService.atualizarEmpresa(node));
                         break;
 
                     }
                     case "apagarEmpresa": {
-                        out.println(empressService.deleteEmpress(node));
+                        out.println(empresaService.apagarEmpresa(node));
                         break;
                     }
-                    case "loginEmpresa": {
-                        out.println(empressService.empressLogin(node.get("email").asText(), node.get("senha").asText()));
+                    case "loginCandidato":
+                    case "loginEmpresa": 
+                    {
+                    	var response = loginService.login(node);
+                    	if (response.has("token")) {
+                    		session.put("token", response.getString("token"));
+                        	session.put("email", node.getString("email"));
+                    	}
+                        out.println(response);
                         break;
                     }
-
                     case "logout": {
-                        out.println(userService.logout(node.get("token").asText()));
+                        out.println(loginService.logout(node, session));
+                        session.clear();
                         break;
                     }
                     case "exit":
