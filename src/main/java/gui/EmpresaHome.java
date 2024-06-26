@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import Cliente.Cliente;
 import Services.CandidatoService;
+//import Services.VagaService;
 
 public class EmpresaHome extends JFrame {
 
@@ -131,7 +132,12 @@ public class EmpresaHome extends JFrame {
         btnDeletar.setBounds(125, 353, 109, 23);
         contentPane.add(btnDeletar);
         
-        JButton btnCadastrarCompetencia = new JButton("Cadastrar Competências");
+        JButton btnCadastrarCompetencia = new JButton("Vagas");
+        btnCadastrarCompetencia.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		vagas();
+        	}
+        });
         btnCadastrarCompetencia.setBounds(82, 319, 192, 23);
         contentPane.add(btnCadastrarCompetencia);
         
@@ -187,6 +193,11 @@ public class EmpresaHome extends JFrame {
 		} else {
 		    JOptionPane.showMessageDialog(EmpresaHome.this, "Sessão inválida", "Erro", JOptionPane.ERROR_MESSAGE);
 		}
+    }
+    
+    private void vagas() {
+    	new VagaHome(cliente, session).setVisible(true);
+    	dispose();
     }
     
     private void atualizarEmpresa() {

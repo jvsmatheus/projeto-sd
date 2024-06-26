@@ -17,8 +17,10 @@ import org.json.JSONObject;
 //import Services.CompetenciaService;
 //import Services.EmpressService;
 import Services.CandidatoService;
+import Services.CompetenciaExperienciaService;
 import Services.EmpresaService;
 import Services.LoginService;
+//import Services.VagaService;
 //import com.fasterxml.jackson.databind.JsonNode;
 //import com.fasterxml.jackson.databind.node.ArrayNode;
 
@@ -28,6 +30,8 @@ public class Servidor {
 
         CandidatoService userService = new CandidatoService();
         EmpresaService empresaService = new EmpresaService();
+        CompetenciaExperienciaService competenciaExperienciaService = new CompetenciaExperienciaService();
+//        VagaService vagaService = new VagaService();
         LoginService loginService = new LoginService();
         
         HashMap<String, String> session = new HashMap<String, String>();
@@ -54,6 +58,7 @@ public class Servidor {
                 JSONObject node = new JSONObject(input);
 
                 switch (node.getString("operacao")) {
+                // Candidato
                     case "cadastrarCandidato": {
                     	var response = userService.cadastrarCandidato(node);
                     	session.put("token", response.getString("token"));
@@ -73,32 +78,8 @@ public class Servidor {
                         out.println(userService.apagarCandidato(node));
                         break;
                     }
-//                    case "cadastrarCompetenciaExperiencia": {
-//                        String email = node.get("email").asText();
-//                        String token = node.get("token").asText();
-//
-//                        System.out.println(node);
-
-//                        ArrayNode competenciasArray = (ArrayNode) node.get("competenciaExperiencia");
-//                        for (JsonNode competenciaNode : competenciasArray) {
-//                            String competencia = competenciaNode.get("competencia").asText();
-//                            int experiencia = competenciaNode.get("experiencia").asInt();
-//
-//                            if (CompetenciaService.isCompetenciaValida(competencia)) {
-//                                CompetenciaExperiencia competenciaExperiencia = new CompetenciaExperiencia();
-//                                competenciaExperiencia.setCompetencia(competencia);
-//                                competenciaExperiencia.setExperiencia(experiencia);
-//                                competenciaExperiencia.setCandidato(user);
-//
-//                                session.save(competenciaExperiencia);session.save(competenciaExperiencia);
-//                            } else {
-//                                responseNode.put("status", 400);
-//                                responseNode.put("mensagem", "Competência inválida: " + competencia);
-//                                responseWriter.println(responseNode.toString());
-//                                return;
-//                            }
-//                        }
-//                    }
+                    
+                // Empresa
                     case "cadastrarEmpresa": {
                         out.println(empresaService.cadastarEmpresa(node));
                         break;
@@ -116,6 +97,36 @@ public class Servidor {
                         out.println(empresaService.apagarEmpresa(node));
                         break;
                     }
+                    
+                // Competência/Experiencia
+                    case "cadastrarCompetenciaExperiencia": {
+                        out.println(competenciaExperienciaService.cadastrarCompetenciaExperiencia(node));
+                        break;
+                    }
+                    case "visualizarCompetenciaExperiencia": {
+                    	out.println(competenciaExperienciaService.visualizarCompetenciaExperiencia(node));
+                        break;
+                    }
+                    case "atualizarCompetenciaExperiencia": {
+                    	out.println(competenciaExperienciaService.atualizarCompetenciaExperiencia(node));
+                        break;
+                    }
+                    case "apagarCompetenciaExperiencia": {
+                    	out.println(competenciaExperienciaService.apagarCompetenciaExperiencia(node));
+                        break;
+                    }
+                    
+                // Vaga
+//                    case "cadastrarVaga": {
+//                    	out.println(vagaService.cadastrarVaga(node));
+//                        break;
+//                    }
+//                    case "visualizarVaga": {
+//                    	out.println(vagaService.visualizarVaga(node));
+//                        break;
+//                    }
+                    
+                // Login
                     case "loginCandidato":
                     case "loginEmpresa": 
                     {

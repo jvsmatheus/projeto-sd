@@ -1,102 +1,101 @@
 package Model;
 
 import java.util.List;
-
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "vaga")
 public class Vaga {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private long id;
     @Column(name = "nome")
     private String nome;
-
-    @Column(name = "faixaSalarial")
+    @Column(name = "faixa_salarial")
     private double faixaSalarial;
-
     @Column(name = "descricao")
     private String descricao;
-
     @Column(name = "estado")
     private String estado;
 
-    @ManyToOne
-    @JoinColumn(name = "email", referencedColumnName = "email")
-    private Empresa empresa;
+//    @ManyToMany
+//    @JoinTable(
+//        name = "vaga_competencia",
+//        joinColumns = @JoinColumn(name = "vaga_id"),
+//        inverseJoinColumns = @JoinColumn(name = "competencia")
+//    )
+//    private List<VagaCompetencia> competencias;
+//
+//    @ManyToOne
+//    @JoinTable(
+//            name = "empresa_vaga_competencia",
+//            joinColumns = @JoinColumn(name = "vaga_id"),
+//            inverseJoinColumns = @JoinColumn(name = "competencia")
+//        )
+//    @JoinColumn(name = "empresa_id", nullable = false)
+//    private Empresa empresa;
 
-    @ElementCollection
-    @CollectionTable(name = "vaga_competencia", joinColumns = @JoinColumn(name = "vaga_id"))
-    @Column(name = "competencia")
-    private List<String> competencias;
+	public long getId() {
+		return id;
+	}
 
-    // Getters and Setters
+	public void setId(long id) {
+		this.id = id;
+	}
 
+	public String getNome() {
+		return nome;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public double getFaixaSalarial() {
+		return faixaSalarial;
+	}
 
-    public List<String> getCompetencias() {
-        return competencias;
-    }
+	public void setFaixaSalarial(double faixaSalarial) {
+		this.faixaSalarial = faixaSalarial;
+	}
 
-    public void setCompetencias(List<String> competencias) {
-        this.competencias = competencias;
-    }
+	public String getDescricao() {
+		return descricao;
+	}
 
-    public Empresa getEmpresa() {
-        return empresa;
-    }
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
 
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
-    }
+	public String getEstado() {
+		return estado;
+	}
 
-    public String getEstado() {
-        return estado;
-    }
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
 
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
+//	public List<VagaCompetencia> getCompetencias() {
+//		return competencias;
+//	}
+//
+//	public void setCompetencias(List<VagaCompetencia> competencias) {
+//		this.competencias = competencias;
+//	}
+//
+//	public Empresa getEmpresa() {
+//		return empresa;
+//	}
+//
+//	public void setEmpresa(Empresa empresa) {
+//		this.empresa = empresa;
+//	}
 
-    public String getDescricao() {
-        return descricao;
-    }
+	@Override
+	public String toString() {
+		return "Vaga [id=" + id + ", nome=" + nome + ", faixaSalarial=" + faixaSalarial + ", descricao=" + descricao
+				+ ", estado=" + estado + "]";
+	}
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public double getFaixaSalarial() {
-        return faixaSalarial;
-    }
-
-    public void setFaixaSalarial(double faixaSalarial) {
-        this.faixaSalarial = faixaSalarial;
-    }
+    
 }

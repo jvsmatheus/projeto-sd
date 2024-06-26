@@ -1,6 +1,6 @@
 
 import Middlewares.JsonMiddleware;
-import Services.CompetenciaService;
+import Services.CompetenciaExperienciaService;
 import Services.CandidatoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -145,7 +145,7 @@ public class Cliente {
                                 ObjectMapper mapper = new ObjectMapper();
                                 ArrayNode competenciasExperiencias = mapper.createArrayNode();
 
-                                List<String> competenciasFixas = CompetenciaService.getCompetenciasFixas();
+                                List<String> competenciasFixas = CompetenciaExperienciaService.getCompetenciasFixas();
                                 System.out.println("Escolha uma competência entre as opções: " + competenciasFixas);
 
                                 while (true) {
@@ -205,7 +205,7 @@ public class Cliente {
                                 ObjectMapper mapper = new ObjectMapper();
                                 ArrayNode competenciasExperiencias = mapper.createArrayNode();
 
-                                List<String> competenciasFixas = CompetenciaService.getCompetenciasFixas();
+                                List<String> competenciasFixas = CompetenciaExperienciaService.getCompetenciasFixas();
                                 System.out.println("Escolha uma competência entre as opções: " + competenciasFixas);
 
                                 boolean continueAdding = true;

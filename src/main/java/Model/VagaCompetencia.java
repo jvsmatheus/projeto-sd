@@ -1,47 +1,55 @@
 package Model;
 
-import jakarta.persistence.*;
-import java.io.Serializable;
-
-
+import javax.persistence.*;
 
 @Entity
 @Table(name = "vaga_competencia")
-public class VagaCompetencia implements Serializable {
+public class VagaCompetencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "vaga_id")
+    private long vagaId;
 
-    @ManyToOne
-    @JoinColumn(name = "vaga_id", nullable = false)
-    private Vaga vaga;
-
-    @Column(name = "competencia", nullable = false)
+    @Column(name = "competencia", nullable = false, length = 50)
     private String competencia;
 
-    // Getters and Setters
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vaga_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    private Vaga vaga;
 
-    public Vaga getVaga() {
-        return vaga;
-    }
+	public VagaCompetencia() {
+		super();
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public long getVagaId() {
+		return vagaId;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setVagaId(long vagaId) {
+		this.vagaId = vagaId;
+	}
 
-    public void setVaga(Vaga vaga) {
-        this.vaga = vaga;
-    }
+	public String getCompetencia() {
+		return competencia;
+	}
 
-    public String getCompetencia() {
-        return competencia;
-    }
+	public void setCompetencia(String competencia) {
+		this.competencia = competencia;
+	}
 
-    public void setCompetencia(String competencia) {
-        this.competencia = competencia;
-    }
+	public Vaga getVaga() {
+		return vaga;
+	}
+
+	public void setVaga(Vaga vaga) {
+		this.vaga = vaga;
+	}
+
+	@Override
+	public String toString() {
+		return "VagaCompetencia [vagaId=" + vagaId + ", competencia=" + competencia + ", vaga=" + vaga + "]";
+	}
+    
+    
+    
 }

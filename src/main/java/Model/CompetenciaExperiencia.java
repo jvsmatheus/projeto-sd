@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,11 +21,21 @@ public class CompetenciaExperiencia {
     @Column(name = "experiencia")
     private int experiencia;
 
-    @ManyToOne
-    @JoinColumn(name = "emailCandidato", nullable = false, referencedColumnName = "email")
-    private Candidato candidato;
+    @Column(name = "email_candidato")
+    private String email;
+    
+    
 
-    // Getters e Setters
+    public CompetenciaExperiencia() {
+	}
+
+	public CompetenciaExperiencia(String competencia, int experiencia, String email) {
+		this.competencia = competencia;
+		this.experiencia = experiencia;
+		this.email = email;
+	}
+
+	// Getters e Setters
     public void setId(String id) {
         this.id = Long.valueOf(String.valueOf(Long.valueOf(id)));
     }
@@ -52,11 +60,24 @@ public class CompetenciaExperiencia {
         this.experiencia = experiencia;
     }
 
-    public Candidato getCandidato() {
-        return candidato;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setCandidato(Candidato candidato) {
-        this.candidato = candidato;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "CompetenciaExperiencia [id=" + id + ", competencia=" + competencia + ", experiencia=" + experiencia
+				+ ", email=" + email + "]";
+	}
+
+	
+    
 }

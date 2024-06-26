@@ -106,7 +106,12 @@ public class CandidatoHome extends JFrame {
         btnDeletar.setBounds(157, 192, 109, 23);
         contentPane.add(btnDeletar);
         
-        JButton btnCadastrarCompetencia = new JButton("Cadastrar Competências");
+        JButton btnCadastrarCompetencia = new JButton("Competências");
+        btnCadastrarCompetencia.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		competencias();
+        	}
+        });
         btnCadastrarCompetencia.setBounds(117, 158, 192, 23);
         contentPane.add(btnCadastrarCompetencia);
         
@@ -148,6 +153,11 @@ public class CandidatoHome extends JFrame {
 		} else {
 		    JOptionPane.showMessageDialog(CandidatoHome.this, "Sessão inválida", "Erro", JOptionPane.ERROR_MESSAGE);
 		}
+    }
+    
+    private void competencias() {
+    	new CompetenciaHome(cliente, session).setVisible(true);
+    	dispose();
     }
     
     private void atualizarCandidato() {

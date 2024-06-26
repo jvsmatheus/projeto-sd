@@ -1,22 +1,22 @@
 package DAO;
 
 import Middlewares.HibernateUtils;
-import Model.Empresa;
+import Model.Vaga;
 import jakarta.persistence.NoResultException;
 import java.util.List;
 
-public class EmpresaDAO {
+public class VagaDAO {
 
     private HibernateUtils db = new HibernateUtils();
 
-    public List<Empresa> getAllEmpresas() {
-        return db.getManager().createQuery("FROM Empresa", Empresa.class).getResultList();
+    public List<Vaga> getAllVagas() {
+        return db.getManager().createQuery("FROM Vaga", Vaga.class).getResultList();
     }
 
-    public Boolean createEmpresa(Empresa empresa) {
+    public Boolean createVaga(Vaga vaga) {
         try {
             db.getManager().getTransaction().begin();
-            db.getManager().persist(empresa);
+            db.getManager().persist(vaga);
             db.getManager().getTransaction().commit();
             return true;
         } catch (Exception ex) {
@@ -28,24 +28,22 @@ public class EmpresaDAO {
         return false;
     }
 
-    public Boolean atualizarEmpresa(String email, Empresa newEmpresaDetails) {
+    public Boolean atualizarVaga(long id, Vaga newVagaDetails) {
         try {
             db.getManager().getTransaction().begin();
 
-            Empresa existingEmpresa = getEmpresaByEmail(email);
-            if (existingEmpresa == null) {
+            Vaga existingVaga = getVagaById(id);
+            if (existingVaga == null) {
                 db.getManager().getTransaction().rollback();
                 return false;
             }
 
-            existingEmpresa.setRazaoSocial(newEmpresaDetails.getRazaoSocial());
-            existingEmpresa.setEmail(newEmpresaDetails.getEmail());
-            existingEmpresa.setCnpj(newEmpresaDetails.getCnpj());
-            existingEmpresa.setSenha(newEmpresaDetails.getSenha());
-            existingEmpresa.setDescricao(newEmpresaDetails.getDescricao());
-            existingEmpresa.setRamo(newEmpresaDetails.getRamo());
+            existingVaga.setNome(newVagaDetails.getNome());
+            existingVaga.setFaixaSalarial(newVagaDetails.getFaixaSalarial());
+            existingVaga.setDescricao(newVagaDetails.getDescricao());
+            existingVaga.setEstado(newVagaDetails.getEstado());
 
-            db.getManager().merge(existingEmpresa);
+            db.getManager().merge(existingVaga);
             db.getManager().getTransaction().commit();
             return true;
         } catch (Exception ex) {
@@ -57,17 +55,17 @@ public class EmpresaDAO {
         return false;
     }
 
-    public Boolean apagarEmpresa(String email) {
+    public Boolean apagarVaga(long id) {
         try {
             db.getManager().getTransaction().begin();
 
-            Empresa empresa = getEmpresaByEmail(email);
-            if (empresa == null) {
+            Vaga vaga = getVagaById(id);
+            if (vaga == null) {
                 db.getManager().getTransaction().rollback();
                 return false;
             }
 
-            db.getManager().remove(empresa);
+            db.getManager().remove(vaga);
             db.getManager().getTransaction().commit();
             return true;
         } catch (Exception ex) {
@@ -79,24 +77,10 @@ public class EmpresaDAO {
         return false;
     }
 
-    public Empresa getEmpresaByEmail(String email) {
+    public Vaga getVagaById(long id) {
         try {
-            String query = "SELECT u FROM Empresa u WHERE u.email = :email";
-            return db.getManager().createQuery(query, Empresa.class)
-                    .setParameter("email", email)
-                    .getSingleResult();
-        } catch (NoResultException nre) {
-            return null;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
-    public Empresa getEmpresaById(int id) {
-        try {
-            String query = "SELECT u FROM Empresa u WHERE u.id = :id";
-            return db.getManager().createQuery(query, Empresa.class)
+            String query = "SELECT u FROM Vaga u WHERE u.id = :id";
+            return db.getManager().createQuery(query, Vaga.class)
                     .setParameter("id", id)
                     .getSingleResult();
         } catch (NoResultException nre) {
@@ -105,5 +89,35 @@ public class EmpresaDAO {
             ex.printStackTrace();
             return null;
         }
+    }
+
+    public Vaga getVagaByNome(String nome) {
+        try {
+            String query = "SELECT u FROM Vaga u WHERE u.nome = :nome";
+            return db.getManager().createQuery(query, Vaga.class)
+                    .setParameter("nome", nome)
+                    .getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Vaga> getVagasByEmail(String email) {
+        try {
+            String query = "SELECT u FROM Vaga u WHERE u.empresa.email = :email";
+            return db.getManager().createQuery(query, Vaga.class)
+                    .setParameter("email", email)
+                    .getResultList();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public Boolean cadastrarVaga(Vaga vaga) {
+        return createVaga(vaga);
     }
 }
